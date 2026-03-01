@@ -11,3 +11,8 @@ pyyaml
 numpy
 scipy
 submitit
+sqlalchemy
+passlib[bcrypt]
+bcrypt==3.2.0
+python-jose[cryptography]
+python-multipart

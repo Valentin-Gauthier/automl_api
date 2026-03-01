@@ -1,0 +1,361 @@
+# ==========================================================
+# CONFIGURATION NEVERGRAD (OPTIMISÉE VITESSE)
+# ==========================================================
+
+# ----------------------------------------------------------
+# 1. REGRESSION
+# ----------------------------------------------------------
+
+Linear Regression:
+  fit_intercept: [True, False]
+
+Ridge:
+  alpha: 
+    type: log
+    min: 0.01
+    max: 100.0
+
+K-Neighbors Regressor:
+  n_neighbors: 
+    type: int
+    min: 3
+    max: 20 
+  weights: ['distance', 'uniform']
+  p: [1, 2] 
+  n_jobs: 1
+
+SVR:
+  C: 
+    type: log
+    min: 0.1
+    max: 1000.0
+  kernel: ['rbf', 'linear'] 
+  gamma: ['scale', 'auto', 0.1]
+  epsilon: 
+    type: float
+    min: 0.01
+    max: 0.5
+  max_iter: 5000 
+
+Random Forest Regressor:
+  n_estimators: 
+    type: int
+    min: 50
+    max: 200 
+  max_depth: [10, 20, 30, null]
+  min_samples_split: 
+    type: int
+    min: 2
+    max: 15
+  min_samples_leaf: 
+    type: int
+    min: 1
+    max: 4
+  n_jobs: 1
+
+Gradient Boosting Regressor:
+  n_estimators: 
+    type: int
+    min: 50
+    max: 200
+  learning_rate: 
+    type: log
+    min: 0.05
+    max: 0.2
+  max_depth: 
+    type: int
+    min: 3
+    max: 5
+  subsample: 
+    type: float
+    min: 0.8
+    max: 1.0
+  # --- EARLY STOPPING ---
+  n_iter_no_change: 10
+  validation_fraction: 0.1
+
+MLP Regressor:
+  regressor__hidden_layer_sizes: [[50], [100], [100, 50]]
+  regressor__activation: ['relu', 'tanh']
+  regressor__alpha: 
+    type: log
+    min: 0.0001
+    max: 0.01
+  regressor__learning_rate_init: 
+    type: log
+    min: 0.001
+    max: 0.01
+  regressor__max_iter: 500
+  # --- EARLY STOPPING ---
+  regressor__early_stopping: True
+  regressor__n_iter_no_change: 10
+
+Hist Gradient Boosting:
+  learning_rate: 
+    type: log
+    min: 0.01
+    max: 0.2
+  max_iter: 
+    type: int
+    min: 100
+    max: 500
+  max_depth: [null, 10, 20]
+  l2_regularization: 
+    type: float
+    min: 0.0
+    max: 1.0
+  # --- EARLY STOPPING ---
+  early_stopping: True
+  n_iter_no_change: 10
+
+
+ElasticNet:
+  alpha: 
+    type: log
+    min: 0.01
+    max: 100.0
+  l1_ratio: [0.1, 0.5, 0.9] # 0.1=proche Ridge, 0.9=proche Lasso
+
+Linear SVR:
+  C: 
+    type: log
+    min: 0.01
+    max: 100.0
+  epsilon: [0.0, 0.1, 0.5]
+  max_iter: 2000
+
+Extra Trees Regressor:
+  n_estimators: 
+    type: int
+    min: 50
+    max: 200
+  max_depth: [10, 20, 30, null]
+  min_samples_split: 
+    type: int
+    min: 2
+    max: 10
+  n_jobs: 1
+
+# ----------------------------------------------------------
+# 2. BINARY & MULTICLASS CLASSIFICATION
+# ----------------------------------------------------------
+
+Logistic Regression:
+  C: 
+    type: log
+    min: 0.01
+    max: 100.0
+  solver: ['lbfgs']
+  max_iter: 2000
+
+K-Neighbors Classifier:
+  n_neighbors: 
+    type: int
+    min: 3
+    max: 20
+  weights: ['distance', 'uniform']
+  p: [1, 2]
+  n_jobs: 1
+
+Gaussian Naive Bayes:
+  var_smoothing: 
+    type: log
+    min: 0.0000000001
+    max: 0.00001
+
+Bernoulli Naive Bayes:
+  alpha: 
+    type: log
+    min: 0.01
+    max: 2.0
+  binarize: 
+    type: float
+    min: 0.0
+    max: 0.7
+
+SVC:
+  C: 
+    type: log
+    min: 0.1
+    max: 1000.0
+  kernel: ['rbf', 'poly']
+  gamma: ['scale', 'auto']
+  probability: True 
+  max_iter: 2000 
+
+Random Forest Classifier:
+  n_estimators: 
+    type: int
+    min: 50
+    max: 200
+  max_depth: [10, 20, 30, null]
+  min_samples_split: 
+    type: int
+    min: 2
+    max: 10
+  min_samples_leaf: 
+    type: int
+    min: 1
+    max: 4
+  class_weight: [null, 'balanced']
+  n_jobs: 1
+
+Gradient Boosting Classifier:
+  n_estimators: 
+    type: int
+    min: 50
+    max: 200
+  learning_rate: 
+    type: log
+    min: 0.05
+    max: 0.3
+  max_depth: 
+    type: int
+    min: 3
+    max: 6
+  subsample: 
+    type: float
+    min: 0.8
+    max: 1.0
+  # --- EARLY STOPPING ---
+  n_iter_no_change: 10
+  validation_fraction: 0.1
+
+MLP Classifier:
+  hidden_layer_sizes: [[50], [100], [100, 50]]
+  activation: ['relu', 'tanh']
+  alpha: 
+    type: log
+    min: 0.0001
+    max: 0.01
+  learning_rate_init: 
+    type: log
+    min: 0.001
+    max: 0.01
+  max_iter: 500
+  # --- EARLY STOPPING ---
+  early_stopping: True
+  n_iter_no_change: 10
+  
+Linear SVC:
+  C: 
+    type: log
+    min: 0.01
+    max: 100.0
+  # penalty='l2' est standard, 'l1' sert à la sélection de features
+  penalty: ['l2'] 
+  max_iter: 2000
+
+Extra Trees Classifier:
+  n_estimators: 
+    type: int
+    min: 50
+    max: 200
+  max_depth: [10, 20, 30, null]
+  min_samples_split: 
+    type: int
+    min: 2
+    max: 10
+  n_jobs: 1
+# ----------------------------------------------------------
+# 3. MULTI-LABEL CLASSIFICATION
+# ----------------------------------------------------------
+
+Random Forest Classifier Multi-label:
+  estimator__n_estimators: 
+    type: int
+    min: 50
+    max: 150 
+  estimator__max_depth: [10, 20, 30, null] 
+  estimator__min_samples_leaf: 
+    type: int
+    min: 1
+    max: 4
+  estimator__n_jobs: 1
+  # Ajout vital pour votre score (Rappel) :
+  estimator__class_weight: ["balanced"]
+
+K-Neighbors Classifier Multi-label:
+  estimator__n_neighbors: 
+    type: int
+    min: 3
+    max: 15
+  estimator__weights: ['distance', 'uniform']
+  estimator__n_jobs: 1
+
+Gradient Boosting Classifier Multi-label:
+  estimator__n_estimators: 
+    type: int
+    min: 50
+    max: 200  
+  estimator__learning_rate: 
+    type: log
+    min: 0.05 
+    max: 0.2    
+  estimator__max_depth: 
+    type: int
+    min: 3
+    max: 5
+  estimator__subsample: 
+    type: float
+    min: 0.8
+    max: 1.0
+  # --- EARLY STOPPING ---
+  estimator__validation_fraction: 0.1
+  estimator__n_iter_no_change: 10
+
+Hist Gradient Boosting Multi-label:
+  estimator__learning_rate: 
+    type: log
+    min: 0.01
+    max: 0.2
+  estimator__max_iter: 
+    type: int
+    min: 100
+    max: 500
+  estimator__max_depth: [null, 10, 20]
+  estimator__l2_regularization: 
+    type: float
+    min: 0.0
+    max: 1.0
+  # --- EARLY STOPPING ---
+  estimator__early_stopping: True
+  estimator__n_iter_no_change: 10
+
+MLP Multi-label:
+  hidden_layer_sizes: [[100], [100, 50], [200, 100]]
+  activation: ['relu']
+  alpha: 
+    type: log
+    min: 0.0001
+    max: 0.01
+  learning_rate_init: 
+    type: log
+    min: 0.001
+    max: 0.01
+  max_iter: 500
+  # --- EARLY STOPPING ---
+  early_stopping: True
+  n_iter_no_change: 10
+
+Ridge Classifier:
+  estimator__alpha:
+    type: log
+    min: 0.01
+    max: 100.0
+  estimator__class_weight: ["balanced"]
+  
+Linear SVC Multi-label:
+  estimator__C: 
+    type: log
+    min: 0.01
+    max: 100.0
+  estimator__max_iter: 2000
+
+Extra Trees Classifier Multi-label:
+  estimator__n_estimators: 
+    type: int
+    min: 50
+    max: 200
+  estimator__max_depth: [10, 20, 30, null]
+  estimator__n_jobs: 1

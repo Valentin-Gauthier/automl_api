@@ -1,2 +1,13 @@
 fastapi
 uvicorn
+coverage
+httpx
+pydantic
+joblib
+pandas
+scikit-learn==1.7.2
+nevergrad
+pyyaml
+numpy
+scipy
+submitit

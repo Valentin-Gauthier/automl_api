@@ -14,3 +14,12 @@ class CarFeatures(BaseModel):
     engine_hp: float
     engine_liters: float
     engine_cyl: float 
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    is_admin: bool = False
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

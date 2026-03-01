@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.database import engine
 import app.db_models as db_models
-from app.routers import predict, auth
+from app.routers import predict, auth, admin
 
 app = FastAPI(
     title="API_AutoML",
@@ -13,6 +13,7 @@ db_models.Base.metadata.create_all(bind=engine)
 
 app.include_router(predict.router)
 app.include_router(auth.router)
+app.include_router(admin.router)
 
 @app.get("/")
 def root():

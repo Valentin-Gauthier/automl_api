@@ -23,3 +23,17 @@ class UserCreate(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class TrainParams(BaseModel):
+    test_size: float = 0.2
+    random_state: int = 42
+    scoring: str = "auto"
+    n_folds: int = 3
+    feature_selection_threshold: float = 99999.0 
+    budget: int = 2
+    num_workers: int = 2
+    timeout_min: int = 1
+    mem_gb: int = 2
+    cpus_per_task: int = 1
+    cluster_partition: str = "gpu"
+    verbose: bool = True

@@ -5,5 +5,8 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/code/app
+      - ./models:/code/models
+      - ./src:/code/src
+      - ./data:/code/data
     env_file:
       - .env

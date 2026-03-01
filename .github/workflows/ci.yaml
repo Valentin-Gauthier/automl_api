@@ -1,0 +1,35 @@
+name: Integration Continue
+
+# 1. Élément déclencheur : à chaque push sur une branche feature
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+  build:
+    # 2. Environnement : Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      # 3. Récupération du code
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      # 4. Installation de Python 3.11
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 5. Installation des dépendances
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 6. Exécution des tests et du rapport de couverture
+      - name: Tests execution
+        run: |
+          python -m coverage run -m unittest discover -s tests
+          coverage report -m

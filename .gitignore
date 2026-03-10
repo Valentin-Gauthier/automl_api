@@ -2,5 +2,20 @@ venv
 __pycache__/
 *.db
 .env
-/data
+/api/data
 
+*.iml
+.gradle
+local.properties
+/front/.idea/caches
+/front/.idea/libraries
+/front/.idea/modules.xml
+/front/.idea/workspace.xml
+/front/.idea/navEditor.xml
+/front/.idea/assetWizardSettings.xml
+.DS_Store
+/front/build
+/front/captures
+.externalNativeBuild
+.cxx
+local.properties

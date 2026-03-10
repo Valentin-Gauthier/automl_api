@@ -1,3 +1,6 @@
+# global
+.swp
+
 # Back
 venv
 __pycache__/

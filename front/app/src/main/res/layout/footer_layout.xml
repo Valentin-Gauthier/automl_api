@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="#16a34a"
+    android:padding="12dp">
+
+    <ImageButton
+        android:id="@+id/btnHome"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/home"
+        android:src="@drawable/maison"
+        android:background="@drawable/circle_header_background"
+        android:scaleType="centerInside"/>
+
+    <ImageButton
+        android:id="@+id/btnAddVehicle"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/estimer"
+        android:src="@drawable/add_vehicule"
+        android:background="@drawable/circle_header_background"
+        android:scaleType="centerInside"/>
+
+    <ImageButton
+        android:id="@+id/btnSearch"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/recherche"
+        android:src="@drawable/loupe"
+        android:background="@drawable/circle_header_background"
+        android:scaleType="centerInside"/>
+</LinearLayout>

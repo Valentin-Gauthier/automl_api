@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EcoDrive</string>
+    <string name="mission">Votre assistant d\'achat et vente de véhicules</string>
+    <string name="home">Retour à l\'accueil</string>
+    <string name="estimer">Estimer le coût d\'un nouveau véhicule</string>
+    <string name="recherche">Rechercher un véhicule enregistré</string>
 </resources>

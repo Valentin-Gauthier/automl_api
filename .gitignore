@@ -1,9 +1,11 @@
+# Back
 venv
 __pycache__/
 *.db
 .env
 /api/data
 
+# Front
 *.iml
 .gradle
 local.properties
@@ -19,3 +21,8 @@ local.properties
 .externalNativeBuild
 .cxx
 local.properties
+
+/front/app/build
+
+/front/.idea/shelf/
+/front/.idea/workspace.xml

@@ -5,33 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Scanner -->
-    <TextureView
-        android:id="@+id/cameraPreview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <!-- Flou des bords (simulé avec des vues semi-transparentes) -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="top"
-        android:background="#80000000"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom"
-        android:background="#80000000"/>
-    <View
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#80000000"/>
-    <View
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:background="#80000000"/>
+    <include layout="@layout/photo" />
 
     <!-- Consigne (visible uniquement en mode paysage) -->
     <TextView

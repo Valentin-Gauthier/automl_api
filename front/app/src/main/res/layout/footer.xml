@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/colorPrimaryDark"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" />
+
+    <ImageButton
+        android:id="@+id/btnHome"
+        android:layout_width="0dp"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_weight="1"
+        android:background="@drawable/circle_header_background"
+        android:contentDescription="@string/home"
+        android:scaleType="centerInside"
+        android:src="@drawable/maison" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" />
+
+    <ImageButton
+        android:id="@+id/btnAddVehicle"
+        android:layout_width="0dp"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_weight="1"
+        android:background="@drawable/circle_header_background"
+        android:contentDescription="@string/estimer"
+        android:scaleType="centerInside"
+        android:src="@drawable/add_vehicule" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" />
+
+    <ImageButton
+        android:id="@+id/btnSearch"
+        android:layout_width="0dp"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_weight="1"
+        android:background="@drawable/circle_header_background"
+        android:contentDescription="@string/recherche"
+        android:scaleType="centerInside"
+        android:src="@drawable/loupe" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25" />
+</LinearLayout>

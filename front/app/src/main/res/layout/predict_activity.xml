@@ -18,7 +18,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -26,7 +25,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/estimation_prix"
+                android:text="@string/price_estimation_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
@@ -41,51 +40,51 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/prix_occasion"
+                        android:text="@string/price_used_vehicle"
                         android:textColor="?android:attr/textColorSecondary"
                         android:padding="8dp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/price_start"
+                        android:text="@string/price_range_start"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="8dp"/>
                     <TextView
                         android:id="@+id/usedPriceMin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/exemple_price"
+                        android:text="@string/price_example"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="8dp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/price_unit"
+                        android:text="@string/price_currency_unit"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="8dp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/price_middle"
+                        android:text="@string/price_range_middle"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="8dp"/>
                     <TextView
                         android:id="@+id/usedPriceMax"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/exemple_price"
+                        android:text="@string/price_example"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="8dp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/price_unit"
+                        android:text="@string/price_currency_unit"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="8dp"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/price_end"
+                        android:text="@string/price_range_end"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="8dp"/>
                 </TableRow>
@@ -94,51 +93,51 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/prix_neuf"
+                    android:text="@string/price_new_vehicle"
                     android:textColor="?android:attr/textColorSecondary"
                     android:padding="8dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/price_start"
+                    android:text="@string/price_range_start"
                     android:textColor="?android:attr/textColorPrimary"
                     android:padding="8dp"/>
                 <TextView
                     android:id="@+id/newPriceMin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/exemple_price"
+                    android:text="@string/price_example"
                     android:textColor="?android:attr/textColorPrimary"
                     android:padding="8dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/price_unit"
+                    android:text="@string/price_currency_unit"
                     android:textColor="?android:attr/textColorPrimary"
                     android:padding="8dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/price_middle"
+                    android:text="@string/price_range_middle"
                     android:textColor="?android:attr/textColorPrimary"
                     android:padding="8dp"/>
                 <TextView
                     android:id="@+id/newPriceMax"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/exemple_price"
+                    android:text="@string/price_example"
                     android:textColor="?android:attr/textColorPrimary"
                     android:padding="8dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/price_unit"
+                    android:text="@string/price_currency_unit"
                     android:textColor="?android:attr/textColorPrimary"
                     android:padding="8dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/price_end"
+                    android:text="@string/price_range_end"
                     android:textColor="?android:attr/textColorPrimary"
                     android:padding="8dp"/>
             </TableRow>
@@ -156,7 +155,7 @@
                 android:id="@+id/btnFindNearestGarage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/search_car"
+                android:text="@string/action_search_nearby_garage"
                 android:layout_marginBottom="8dp"
                 style="?android:attr/borderlessButtonStyle"/>
 
@@ -164,7 +163,7 @@
                 android:id="@+id/btnPrepareAd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_ad"
+                android:text="@string/action_prepare_ad"
                 android:layout_marginBottom="8dp"
                 style="?android:attr/borderlessButtonStyle"/>
 
@@ -172,7 +171,7 @@
                 android:id="@+id/btnAddToList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/save"
+                android:text="@string/action_save_to_list"
                 style="?android:attr/borderlessButtonStyle"/>
         </LinearLayout>
     </LinearLayout>

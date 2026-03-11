@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="@string/scan_consign"
+        android:text="@string/instruction_scan_consign"
         android:textColor="?android:attr/textColorPrimaryInverse"
         android:textSize="14sp"/>
 
@@ -45,5 +44,5 @@
         android:layout_marginBottom="18dp"
         android:background="@drawable/circle_header_background"
         android:src="@android:drawable/ic_menu_camera"
-        android:contentDescription="@string/scan_trigger"/>
+        android:contentDescription="@string/action_scan_trigger"/>
 </FrameLayout>

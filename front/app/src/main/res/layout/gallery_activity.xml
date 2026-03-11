@@ -5,13 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/header"/>
-
-    <TableLayout
-        android:id="@+id/recyclerVehicles"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-    </TableLayout>
-
+        <TableLayout
+            android:id="@+id/vehicleGallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            android:shrinkColumns="*">
+        </TableLayout>
+    </ScrollView>
     <include layout="@layout/footer"/>
 </LinearLayout>

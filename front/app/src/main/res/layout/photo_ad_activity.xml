@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="@string/photo_consign"
+        android:text="@string/instruction_photo_consign"
         android:textColor="?android:attr/textColorPrimaryInverse"
         android:textSize="14sp"
         tools:visibility="visible"/>
@@ -30,12 +30,12 @@
         android:layout_gravity="center_vertical|start"
         android:layout_marginStart="33dp"
         android:background="?android:attr/colorPrimary"
-        android:thumb="@drawable/carslider"
+        android:thumb="@drawable/car_slider"
         android:alpha="0.7"/>
 
     <!-- Guide horizontal (niveau de tangage) -->
     <SeekBar
-        android:id="@+id/tanguageAlignmentGuide"
+        android:id="@+id/tangageAlignmentGuide"
         android:layout_width="match_parent"
         android:layout_height="33dp"
         android:clickable="false"
@@ -43,7 +43,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="33dp"
         android:background="?android:attr/colorPrimary"
-        android:thumb="@drawable/carslider"
+        android:thumb="@drawable/car_slider"
         android:alpha="0.7"/>
 
     <!-- Bouton de déclenchement -->
@@ -55,5 +55,5 @@
         android:layout_marginBottom="18dp"
         android:background="@drawable/circle_header_background"
         android:src="@android:drawable/ic_menu_camera"
-        android:contentDescription="@string/photo_trigger"/>
+        android:contentDescription="@string/action_photo_trigger"/>
 </FrameLayout>

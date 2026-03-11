@@ -14,7 +14,6 @@
         android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/emptyLayout"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
@@ -23,7 +22,6 @@
 
             <!-- Group 1: Information -->
             <LinearLayout
-                android:id="@+id/emptyLayout"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -32,14 +30,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="I"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:src="@drawable/info"
                     android:background="@drawable/circle_header_background"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp"
+                    android:importantForAccessibility="no"/>
                 <LinearLayout
-                    android:id="@+id/emptyLayout"
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,7 +42,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/hello"
+                        android:text="@string/onboarding_welcome"
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
@@ -55,14 +50,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/hello_expl_start"
+                        android:text="@string/onboarding_dream_collection_start"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/collection_name"
+                        android:text="@string/onboarding_dream_collection_name"
                         android:textColor="?android:attr/colorPrimary"
                         android:textStyle="bold"
                         android:layout_marginBottom="4dp"/>
@@ -70,7 +65,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/hello_expl_end"
+                        android:text="@string/onboarding_dream_collection_end"
                         android:textColor="?android:attr/textColorSecondary"
                         android:layout_marginBottom="32dp"/>
                 </LinearLayout>
@@ -89,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/no_vehicle"
+                android:text="@string/onboarding_no_vehicle_registered"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="?android:attr/textColorPrimary"
@@ -98,7 +93,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/start_action"
+                android:text="@string/onboarding_start_action"
                 android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginBottom="32dp"/>
 
@@ -107,7 +102,7 @@
                 android:id="@+id/btnAddFirstVehicle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_vehicle"
+                android:text="@string/action_add_vehicle"
                 android:textAllCaps="false"
                 android:layout_marginBottom="16dp"/>
 
@@ -115,7 +110,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/how_start"
+                android:text="@string/instruction_start_scan"
                 android:textColor="?android:attr/colorPrimary"
                 android:textStyle="italic"
                 android:layout_marginBottom="16dp"/>

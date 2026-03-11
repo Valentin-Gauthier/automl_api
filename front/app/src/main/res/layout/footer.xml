@@ -17,7 +17,7 @@
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_weight="1"
         android:background="@drawable/circle_header_background"
-        android:contentDescription="@string/home"
+        android:contentDescription="@string/nav_home"
         android:scaleType="centerInside"
         android:src="@drawable/maison" />
 
@@ -32,9 +32,9 @@
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_weight="1"
         android:background="@drawable/circle_header_background"
-        android:contentDescription="@string/estimer"
+        android:contentDescription="@string/nav_estimate_vehicle_price"
         android:scaleType="centerInside"
-        android:src="@drawable/add_vehicule" />
+        android:src="@drawable/add_vehicle" />
 
     <Space
         android:layout_width="0dp"
@@ -47,7 +47,7 @@
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_weight="1"
         android:background="@drawable/circle_header_background"
-        android:contentDescription="@string/recherche"
+        android:contentDescription="@string/nav_search_registered_vehicle"
         android:scaleType="centerInside"
         android:src="@drawable/loupe" />
 

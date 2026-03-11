@@ -52,7 +52,7 @@
             android:id="@+id/activityDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/mission"
+            android:text="@string/app_mission"
             android:textColor="?android:attr/textColorPrimaryInverse"
             android:textSize="12sp" />
     </LinearLayout>

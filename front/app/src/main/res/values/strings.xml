@@ -1,53 +1,61 @@
 <resources>
-    <string name="app_name">EcoDrive</string>
-    <string name="mission">Votre assistant d\'achat et vente de véhicules</string>
-    <string name="home">Retour à l\'accueil</string>
-    <string name="estimer">Estimer le coût d\'un nouveau véhicule</string>
-    <string name="recherche">Rechercher un véhicule enregistré</string>
+    <!-- App Info -->
+    <string name="app_name">Eco-Drive</string>
+    <string name="app_mission">Votre assistant d\'achat et de vente de véhicules</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Retour à l\'accueil</string>
+    <string name="nav_estimate_vehicle_price">Estimer le coût d\'un nouveau véhicule</string>
+    <string name="nav_search_registered_vehicle">Rechercher un véhicule enregistré</string>
+
+    <!-- Vehicle Details -->
     <string name="vehicle_image_description">Image du véhicule</string>
     <string name="vehicle_identity">Identité du véhicule</string>
-    <string name="brand">Marque</string>
-    <string name="model">Modèle</string>
-    <string name="date">Date de mise en circulation</string>
-    <string name="mileage">Kilométrage</string>
-    <string name="estimate_price">Estimer le prix du véhicule</string>
-    <string name="take_photo">Prendre une photo</string>
-    <string name="color">Couleur de la carrosserie</string>
-    <string name="motorisation">Motorisation</string><string name="vehicle_identity">Identité du véhicule</string>
-    <string name="brand">Marque</string>
-    <string name="model">Modèle</string>
-    <string name="date">Date de mise en circulation</string>
-    <string name="color">Couleur</string>
-    <string name="motorisation">Motorisation</string>
-    <string name="energy_type">Type d\'énergie</string>
-    <string name="gearbox_type">Type de boîte de vitesse</string>
-    <string name="gearbox_speed">Nombre de vitesses</string>
-    <string name="mileage">Kilométrage</string>
-    <string name="average_mileage_france">Le kilométrage moyen en France est d\'environ 13000km par an.</string>
-    <string name="estimate_price">Estimer le prix du véhicule</string>
-    <string name="slider_thumb">Curseur de kilométrage</string>
-    <string name="important_information">Ces informations sont importantes pour l'estimation précise du prix du véhicule.</string>
-    <string name="hello">Bienvenue sur Eco-drive</string>
-    <string name="hello_expl_start">Vous n\'avez pas encore de véhicules dans votre</string>
-    <string name="collection_name">collection de rêve</string>
-    <string name="hello_expl_end">Cette liste vous permet de retrouver vos anciens véhicules, vos coups de cœur et vos projets futurs.</string>
-    <string name="no_vehicle">Aucun véhicule enregistré</string>
-    <string name="start_action">Commencez par ajouter votre premier véhicule pour obtenir une estimation de prix</string>
-    <string name="add_vehicle">+ Ajouter un véhicule</string>
-    <string name="how_start">Prenez en photo la plaque d\'immatriculation pour commencer</string>
-    <string name="estimation_prix">Estimation du prix</string>
-    <string name="prix_occasion">Prix d\'occasion :</string>
-    <string name="price_start">de</string>
-    <string name="price_end"></string>
-    <string name="price_unit">€</string>
-    <string name="price_middle">à</string>
-    <string name="prix_neuf">Prix neuf :</string>
-    <string name="search_car">Chercher le garage le plus proche</string>
-    <string name="create_ad">Préparer une annonce</string>
-    <string name="save">Ajouter à une liste</string>
-    <string name="exemple_price">XXX XXX</string>
-    <string name="scan_consign">Prenez en photo votre plaque d\'immatriculation afin de récupérer les informations sur votre voiture.</string>
-    <string name="scan_trigger">Déclenche le scan, dans le cas où la plaque d\'immatriculation n\'est pas détecté.</string>
-    <string name="photo_consign">Prenez en photo votre voiture afin de préparer une annonce augmentant vos chances de ventes.</string>
-    <string name="photo_trigger">Déclenche la prise de la photo.</string>
+    <string name="vehicle_brand">Marque</string>
+    <string name="vehicle_model">Modèle</string>
+    <string name="vehicle_date">Date de mise en circulation</string>
+    <string name="vehicle_color">Couleur de la carrosserie</string>
+    <string name="vehicle_motorization">Motorisation</string>
+    <string name="vehicle_energy_type">Type d\'énergie</string>
+    <string name="vehicle_gearbox_type">Type de boîte de vitesse</string>
+    <string name="vehicle_gearbox_speed">Nombre de vitesses</string>
+    <string name="vehicle_mileage">Kilométrage</string>
+    <string name="vehicle_average_mileage_france">Le kilométrage moyen en France est d\'environ 13 000 km par an.</string>
+
+    <!-- Actions -->
+    <string name="action_estimate_price">Estimer le prix du véhicule</string>
+    <string name="action_take_photo">Prendre une photo</string>
+    <string name="action_scan_trigger">Déclencher le scan si la plaque n\'est pas détectée</string>
+    <string name="action_photo_trigger">Prendre la photo</string>
+    <string name="action_add_vehicle">+ Ajouter un véhicule</string>
+    <string name="action_search_nearby_garage">Chercher le garage le plus proche</string>
+    <string name="action_prepare_ad">Préparer une annonce</string>
+    <string name="action_save_to_list">Ajouter à une liste</string>
+
+    <!-- UI Elements -->
+    <string name="ui_mileage_slider_thumb">Curseur de kilométrage</string>
+    <string name="ui_important_information_note">Ces informations sont importantes pour l\'estimation précise du prix du véhicule.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome">Bienvenue sur EcoDrive</string>
+    <string name="onboarding_dream_collection_start">Vous n'avez pas encore de véhicules dans votre</string>
+    <string name="onboarding_dream_collection_name">collection de rêve</string>
+    <string name="onboarding_dream_collection_end">Cette liste vous permet de retrouver vos anciens véhicules, vos coups de cœur et vos projets futurs.</string>
+    <string name="onboarding_no_vehicle_registered">Aucun véhicule enregistré</string>
+    <string name="onboarding_start_action">Commencez par ajouter votre premier véhicule pour obtenir une estimation de prix</string>
+
+    <!-- Instructions -->
+    <string name="instruction_scan_consign">Prenez en photo votre plaque d\'immatriculation afin de récupérer les informations sur votre voiture.</string>
+    <string name="instruction_photo_consign">Prenez en photo votre voiture afin de préparer une annonce augmentant vos chances de vente.</string>
+    <string name="instruction_start_scan">Prenez en photo la plaque d\'immatriculation pour commencer</string>
+
+    <!-- Price Estimation -->
+    <string name="price_estimation_title">Estimation du prix</string>
+    <string name="price_used_vehicle">Prix d\'occasion :</string>
+    <string name="price_range_start">de</string>
+    <string name="price_range_middle">à</string>
+    <string name="price_range_end"></string>
+    <string name="price_currency_unit">€</string>
+    <string name="price_new_vehicle">Prix neuf :</string>
+    <string name="price_example">XXX XXX</string>
 </resources>

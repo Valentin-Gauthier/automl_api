@@ -53,4 +53,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    val roomversion = "2.8.4"
+    implementation("androidx.room:room-runtime:${roomversion}")
+    annotationProcessor("androidx.room:room-compiler:$roomversion")
+    testImplementation("androidx.room:room-testing:${roomversion}")
 }

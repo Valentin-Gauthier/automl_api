@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Image du véhicule en arrière-plan -->
+    <ImageView
+        android:id="@+id/vehicleImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/vehicle_model"/>
+
+    <!-- Logo de la marque (en haut) -->
+    <ImageView
+        android:id="@+id/vehicleBrandLogo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="8dp"
+        android:background="?android:attr/colorBackground"
+        android:padding="4dp"
+        android:contentDescription="@string/vehicle_brand"/>
+
+    <!-- Prix (en bas) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#8A000000"
+        android:orientation="horizontal"
+        android:padding="8dp">
+        <TextView
+            android:id="@+id/vehiclePriceLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/colorPrimary"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/price_currency_unit"
+            android:textColor="?android:attr/textColorPrimaryInverse"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/price_range_middle"
+            android:textColor="?android:attr/textColorPrimaryInverse"/>
+        <TextView
+            android:id="@+id/vehiclePriceHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/colorPrimary"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/price_currency_unit"
+            android:textColor="?android:attr/textColorPrimaryInverse"/>
+    </LinearLayout>
+</FrameLayout>

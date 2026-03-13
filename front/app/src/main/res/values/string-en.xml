@@ -1,0 +1,61 @@
+<resources>
+    <!-- App Info -->
+    <string name="app_name">Eco-Drive</string>
+    <string name="app_mission">Your assistant for buying and selling vehicles</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Back to home</string>
+    <string name="nav_estimate_vehicle_price">Estimate the price of a new vehicle</string>
+    <string name="nav_search_registered_vehicle">Search for a registered vehicle</string>
+
+    <!-- Vehicle Details -->
+    <string name="vehicle_image_description">Vehicle image</string>
+    <string name="vehicle_identity">Vehicle identity</string>
+    <string name="vehicle_brand">Brand</string>
+    <string name="vehicle_model">Model</string>
+    <string name="vehicle_date">Registration date</string>
+    <string name="vehicle_color">Body color</string>
+    <string name="vehicle_motorization">Motorization</string>
+    <string name="vehicle_energy_type">Energy type</string>
+    <string name="vehicle_gearbox_type">Gearbox type</string>
+    <string name="vehicle_gearbox_speed">Number of gears</string>
+    <string name="vehicle_mileage">Mileage</string>
+    <string name="vehicle_average_mileage_france">The average mileage in France is about 13,000 km per year.</string>
+
+    <!-- Actions -->
+    <string name="action_estimate_price">Estimate vehicle price</string>
+    <string name="action_take_photo">Take a photo</string>
+    <string name="action_scan_trigger">Trigger scan if the license plate is not detected</string>
+    <string name="action_photo_trigger">Take the photo</string>
+    <string name="action_add_vehicle">+ Add a vehicle</string>
+    <string name="action_search_nearby_garage">Search for the nearest garage</string>
+    <string name="action_prepare_ad">Prepare an ad</string>
+    <string name="action_save_to_list">Add to a list</string>
+
+    <!-- UI Elements -->
+    <string name="ui_mileage_slider_thumb">Mileage slider</string>
+    <string name="ui_important_information_note">This information is important for an accurate vehicle price estimation.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome">Welcome to EcoDrive</string>
+    <string name="onboarding_dream_collection_start">You don’t have any vehicles in your</string>
+    <string name="onboarding_dream_collection_name">dream collection</string>
+    <string name="onboarding_dream_collection_end">This list allows you to find your old vehicles, favorites, and future projects.</string>
+    <string name="onboarding_no_vehicle_registered">No registered vehicle</string>
+    <string name="onboarding_start_action">Start by adding your first vehicle to get a price estimate</string>
+
+    <!-- Instructions -->
+    <string name="instruction_scan_consign">Take a photo of your license plate to retrieve information about your car.</string>
+    <string name="instruction_photo_consign">Take a photo of your car to prepare an ad and increase your chances of selling.</string>
+    <string name="instruction_start_scan">Take a photo of the license plate to get started</string>
+
+    <!-- Price Estimation -->
+    <string name="price_estimation_title">Price estimation</string>
+    <string name="price_used_vehicle">Used price:</string>
+    <string name="price_range_start">from</string>
+    <string name="price_range_middle">to</string>
+    <string name="price_range_end"></string>
+    <string name="price_currency_unit">€</string>
+    <string name="price_new_vehicle">New price:</string>
+    <string name="price_example">XXX XXX</string>
+</resources>

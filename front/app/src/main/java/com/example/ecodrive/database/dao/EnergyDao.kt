@@ -11,6 +11,6 @@ interface EnergyDao {
     @Insert
     suspend fun insert(energy: Energy)
 
-    @Query("SELECT * FROM energies")
+    @Query("SELECT * FROM Energies")
     fun getAll(): Flow<List<Energy>>
 }

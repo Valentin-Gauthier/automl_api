@@ -12,7 +12,7 @@ import com.example.ecodrive.database.entities.*
         Energy::class,
         Gearbox::class,
         GearboxEnergyCompatibility::class,
-        Marque::class,
+        Brand::class,
         Vehicle::class,
         VehicleAd::class,
         VehicleInList::class,
@@ -23,15 +23,15 @@ import com.example.ecodrive.database.entities.*
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun energyDao(): EnergyDao
-    abstract fun gearboxDao(): GearboxDao
-    abstract fun gearboxEnergyCompatibilityDao(): GearboxEnergyCompatibilityDao
-    abstract fun marqueDao(): MarqueDao
-    abstract fun vehicleAdDao(): VehicleAdDao
-    abstract fun vehicleDao(): VehicleDao
-    abstract fun vehicleInListDao(): VehicleInListDao
-    abstract fun vehicleListDao(): VehicleListDao
-    abstract fun vehiclePrototypeDao(): VehiclePrototypeDao
+    abstract fun energy(): EnergyDao
+    abstract fun gearbox(): GearboxDao
+    abstract fun gearboxEnergyCompatibility(): GearboxEnergyCompatibilityDao
+    abstract fun marque(): BrandDao
+    abstract fun vehicleAd(): VehicleAdDao
+    abstract fun vehicle(): VehicleDao
+    abstract fun vehicleInList(): VehicleInListDao
+    abstract fun vehicleList(): VehicleListDao
+    abstract fun vehiclePrototype(): VehiclePrototypeDao
 
     companion object {
         @Volatile

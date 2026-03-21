@@ -17,7 +17,7 @@
         android:textColor="?android:attr/textColorPrimaryInverse"
         android:textSize="14sp"/>
 
-    <!-- Marque bleue gauche -->
+    <!-- Marque d'alignement bleue à gauche -->
     <View
         android:id="@+id/leftBlueMark"
         android:layout_width="32dp"
@@ -26,7 +26,7 @@
         android:layout_marginStart="64dp"
         android:background="#4285F4"/>
 
-    <!-- Marque bleue droite -->
+    <!-- Marque d'alignement bleue à droite -->
     <View
         android:id="@+id/rightBlueMark"
         android:layout_width="32dp"

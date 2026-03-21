@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "vehicles",
+    tableName = "Vehicles",
     foreignKeys = [
         ForeignKey(
             entity = VehiclePrototype::class,

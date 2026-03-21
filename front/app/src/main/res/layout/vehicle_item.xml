@@ -8,14 +8,14 @@
     android:focusable="true">
 
     <!-- Image du véhicule en arrière-plan -->
-    <ImageView
+<!--    <ImageView
         android:id="@+id/vehicleImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:contentDescription="@string/vehicle_model"/>
-
-    <!-- Logo de la marque (en haut) -->
+-->
+    <!-- Logo de la brand (en haut) -->
     <ImageView
         android:id="@+id/vehicleBrandLogo"
         android:layout_width="48dp"

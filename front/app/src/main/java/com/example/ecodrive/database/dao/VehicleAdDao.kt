@@ -11,6 +11,6 @@ interface VehicleAdDao {
     @Insert
     suspend fun insert(vehicleAd: VehicleAd)
 
-    @Query("SELECT * FROM vehicles_ads WHERE immatriculation=:vehicle")
+    @Query("SELECT * FROM Vehicles_ads WHERE immatriculation=:vehicle")
     fun getAllAdsFrom(vehicle: String): Flow<List<VehicleAd>>
 }

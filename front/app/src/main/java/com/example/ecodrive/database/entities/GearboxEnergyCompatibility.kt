@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 
 @Entity(
-    tableName = "gearbox_energy_compatibilities",
+    tableName = "Gearbox_Energies_compatibilities",
     primaryKeys = ["GearboxId", "EnergyId"],
     foreignKeys = [
         ForeignKey(

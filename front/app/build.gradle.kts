@@ -46,6 +46,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.play.services.games.v2.native.c)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -53,8 +58,16 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    val roomversion = "2.8.4"
-    implementation("androidx.room:room-runtime:${roomversion}")
-    annotationProcessor("androidx.room:room-compiler:$roomversion")
-    testImplementation("androidx.room:room-testing:${roomversion}")
+    implementation("androidx.core:core-splashscreen:1.2.0")
+    implementation ("org.opencv:opencv:4.9.0")
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    val roomVersion = "2.8.4"
+    implementation("androidx.room:room-runtime:${roomVersion}")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    testImplementation("androidx.room:room-testing:${roomVersion}")
+    val cameraVersion = "1.5.3"
+    implementation("androidx.camera:camera-core:${cameraVersion}")
+    implementation("androidx.camera:camera-camera2:${cameraVersion}")
+    implementation("androidx.camera:camera-lifecycle:${cameraVersion}")
+    implementation ("androidx.camera:camera-view:${cameraVersion}")
 }

@@ -6,12 +6,12 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "VehiclePrototype",
+    tableName = "Vehicle_prototypes",
     foreignKeys = [
         ForeignKey(
-            entity = Marque::class,
+            entity = Brand::class,
             parentColumns = ["id"],
-            childColumns = ["MarqueId"]
+            childColumns = ["BrandId"]
         ),
         ForeignKey(
             entity = Energy::class,
@@ -27,9 +27,9 @@ import androidx.room.PrimaryKey
 )
 data class VehiclePrototype(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "vehicleModel") val name: String,
-    @ColumnInfo(name = "GearboxOptions") val gearboxOptions: String,
+    @ColumnInfo(name = "vehicle_Model") val name: String,
+    @ColumnInfo(name = "gearbox_options") val gearboxOptions: String,
     @ColumnInfo(name = "EnergyId") val energyId: Int,
     @ColumnInfo(name = "GearboxId") val gearboxId: Int,
-    @ColumnInfo(name = "MarqueId") val marqueId: Int
+    @ColumnInfo(name = "BrandId") val marqueId: Int
 )

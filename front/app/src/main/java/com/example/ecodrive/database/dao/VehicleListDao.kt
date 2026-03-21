@@ -11,6 +11,6 @@ interface VehicleListDao {
     @Insert
     suspend fun insert(vehicleList: VehicleList)
 
-    @Query("SELECT * FROM VehicleLists")
+    @Query("SELECT * FROM Vehicle_lists")
     fun getAll(): Flow<List<VehicleList>>
 }

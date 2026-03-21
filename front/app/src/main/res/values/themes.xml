@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.EcoDrive" parent="android:Theme.Material.Light" />
+    <style name="Theme.EcoDrive" parent="Theme.AppCompat.DayNight.DarkActionBar" />
+
+    <!-- Thème pour le SplashScreen -->
+    <style name="Theme.EcoDrive.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">?android:attr/colorBackground</item>
+        <item name="windowSplashScreenAnimationDuration">500</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_app</item>
+        <item name="postSplashScreenTheme">@style/Theme.EcoDrive</item>
+    </style>
 </resources>

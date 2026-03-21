@@ -11,6 +11,6 @@ interface GearboxDao {
     @Insert
     suspend fun insert(gearbox: Gearbox)
 
-    @Query("SELECT * FROM gearbox")
+    @Query("SELECT * FROM Gearbox")
     fun getAll(): Flow<List<Gearbox>>
 }

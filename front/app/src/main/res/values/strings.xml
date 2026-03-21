@@ -38,7 +38,7 @@
 
     <!-- Onboarding -->
     <string name="onboarding_welcome">Bienvenue sur EcoDrive</string>
-    <string name="onboarding_dream_collection_start">Vous n'avez pas encore de véhicules dans votre</string>
+    <string name="onboarding_dream_collection_start">Vous n\'avez pas encore de véhicules dans votre</string>
     <string name="onboarding_dream_collection_name">collection de rêve</string>
     <string name="onboarding_dream_collection_end">Cette liste vous permet de retrouver vos anciens véhicules, vos coups de cœur et vos projets futurs.</string>
     <string name="onboarding_no_vehicle_registered">Aucun véhicule enregistré</string>
@@ -58,4 +58,5 @@
     <string name="price_currency_unit">€</string>
     <string name="price_new_vehicle">Prix neuf :</string>
     <string name="price_example">XXX XXX</string>
+    <string name="LoadError">Load ERROR : Le contenu de cet élément devrait êre remplacé à la création de l\'activité.</string>
 </resources>

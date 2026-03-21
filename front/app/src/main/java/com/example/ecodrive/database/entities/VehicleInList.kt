@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 
 @Entity(
-    tableName = "Vehicle_in_list",
+    tableName = "Vehicles_in_lists",
     primaryKeys = ["immatriculation", "ListId"],
     foreignKeys = [
         ForeignKey(

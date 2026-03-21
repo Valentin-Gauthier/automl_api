@@ -16,8 +16,8 @@ interface VehicleInListDao {
         SELECT * FROM Vehicles
         WHERE immatriculation IN (
             SELECT immatriculation FROM Vehicle_in_list
-            WHERE ListId=:list 
+            WHERE ListId=:list
         )
     """)
-    fun getAll(list: Int): Flow<List<Vehicle>>
+    fun getAllFrom(list: Int): Flow<List<Vehicle>>
 }

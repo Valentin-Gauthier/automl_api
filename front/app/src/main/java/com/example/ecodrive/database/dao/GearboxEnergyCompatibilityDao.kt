@@ -14,18 +14,18 @@ interface GearboxEnergyCompatibilityDao {
     suspend fun insert(gearboxEnergyCompatibility: GearboxEnergyCompatibility)
 
     @Query("""
-        SELECT * FROM energies
+        SELECT * FROM Energies
         WHERE id IN (
-            SELECT energyId FROM gearbox_energy_compatibilities
+            SELECT energyId FROM Gearbox_Energies_compatibilities
             WHERE gearboxId = :gearboxId
         )
     """)
     fun getAllCompatibleEnergies(gearboxId: Int): Flow<List<Energy>>
 
     @Query("""
-        SELECT * FROM gearbox
+        SELECT * FROM Gearbox
         WHERE id IN (
-            SELECT gearboxId FROM gearbox_energy_compatibilities
+            SELECT gearboxId FROM Gearbox_Energies_compatibilities
             WHERE energyId = :energyId
         )
     """)

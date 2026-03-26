@@ -59,4 +59,9 @@
     <string name="price_new_vehicle">Prix neuf :</string>
     <string name="price_example">XXX XXX</string>
     <string name="LoadError">Load ERROR : Le contenu de cet élément devrait êre remplacé à la création de l\'activité.</string>
+    <string name="energyTypeFuel">Essence</string>
+    <string name="energyTypeDiesel">Diesel</string>
+    <string name="energyTypeElec">Électrique</string>
+    <string name="gearboxTypesHand">Manuelle</string>
+    <string name="gearboxTypesAuto">Automatique</string>
 </resources>

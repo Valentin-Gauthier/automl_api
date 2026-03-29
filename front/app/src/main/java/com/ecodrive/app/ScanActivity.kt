@@ -81,7 +81,7 @@ class ScanActivity : AppCompatActivity() {
                         if (isProcessing) "Already in process"
                         else "Launch analysis")
             )
-            if (!isProcessing) onScanRequested()
+            if (!isProcessing) onScanRequested(true)
         }
         cameraManager  = CameraManager(this, REQUEST_CAMERA, previewManager.getPreview())
         textExtractor  = TextExtractor()
@@ -100,28 +100,28 @@ class ScanActivity : AppCompatActivity() {
     /**
      * Étape 1 : capture photo.
      */
-    private fun onScanRequested() {
+    private fun onScanRequested(isUserQuery: Boolean = false) {
         if (!cameraManager.isReady) {
             Toast.makeText(this, "Caméra non prête", Toast.LENGTH_SHORT).show()
-            return
+            return checkIfContinue(isUserQuery)
         }
 
         isProcessing = true
 
         cameraManager.capture(
-            onSuccess = { bitmap -> extractText(bitmap) },
-            onError   = { isProcessing = false }
+            onSuccess = { bitmap -> extractText(bitmap, isUserQuery) },
+            onError   = { checkIfContinue(isUserQuery) }
         )
     }
 
     /**
      * Étape 2 : extraction OCR + couleurs.
      */
-    private fun extractText(bitmap: android.graphics.Bitmap) {
+    private fun extractText(bitmap: android.graphics.Bitmap, isUserQuery: Boolean) {
         textExtractor.extract(
             bitmap    = bitmap,
             onResult  = { result -> analyzePlate(result) },
-            onError   = { isProcessing = false }
+            onError   = { checkIfContinue(isUserQuery) }
         )
     }
 
@@ -145,6 +145,11 @@ class ScanActivity : AppCompatActivity() {
         } else {
             goNextActivity("Aucune plaque d'immatriculation détecté.", false)
         }
+    }
+
+    private fun checkIfContinue(isUserQuery: Boolean) {
+        isProcessing = false
+        if (isUserQuery) onPlateResult(null)
     }
 
     // -------------------------------------------------------------------------

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Import du Header. Ids:
+        headerContainer
+        headerAppIcon
+        headerAppName
+        headerActivityDescription
+        headerInfoContainer
+        headerBtnsContainer
+    -->
+    <include layout="@layout/header"/>
+
+    <!-- Barre d'onglet -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/tabContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"></LinearLayout>
+    </ScrollView>
+
+    <!-- Contenu de l'activité -->
+    <ScrollView
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <include layout="@layout/gallery_void"/>
+    </ScrollView>
+
+    <!-- Import du Footer. Ids:
+        FooterBtnHome
+        footerBtnAddvehicle
+        FooterBtnConfig
+    -->
+    <include layout="@layout/footer"/>
+
+</LinearLayout>

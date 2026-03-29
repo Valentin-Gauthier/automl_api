@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/colorPrimaryDark"
+    android:background="?attr/colorPrimarySurface"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="12dp">
@@ -11,45 +12,42 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.25" />
 
-    <ImageButton
-        android:id="@+id/btnHome"
+    <Button
+        android:id="@+id/FooterBtnHome"
         android:layout_width="0dp"
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_weight="1"
-        android:background="@drawable/circle_header_background"
-        android:contentDescription="@string/nav_home"
+        android:drawableTop="@drawable/ic_home"
         android:scaleType="centerInside"
-        android:src="@drawable/maison" />
+        android:text="@string/footerBtnHome" />
 
     <Space
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.25" />
 
-    <ImageButton
-        android:id="@+id/btnAddVehicle"
+    <Button
+        android:id="@+id/FooterBtnAddVehicle"
         android:layout_width="0dp"
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_weight="1"
-        android:background="@drawable/circle_header_background"
-        android:contentDescription="@string/nav_estimate_vehicle_price"
+        android:drawableTop="@drawable/ic_add_vehicle"
         android:scaleType="centerInside"
-        android:src="@drawable/add_vehicle" />
+        android:text="@string/footerBtnAddvehicle" />
 
     <Space
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.25" />
 
-    <ImageButton
-        android:id="@+id/btnSearch"
+    <Button
+        android:id="@+id/FooterBtnConfig"
         android:layout_width="0dp"
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_weight="1"
-        android:background="@drawable/circle_header_background"
-        android:contentDescription="@string/nav_search_registered_vehicle"
+        android:drawableTop="@android:drawable/ic_menu_set_as"
         android:scaleType="centerInside"
-        android:src="@drawable/loupe" />
+        android:text="@string/footerBtnConfig" />
 
     <Space
         android:layout_width="0dp"

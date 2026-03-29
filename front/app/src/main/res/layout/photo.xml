@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:keepScreenOn="true">
 
     <!-- Visionneur de la caméra -->
     <TextureView
@@ -32,4 +33,24 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="#80000000"/>
+
+    <Button
+        android:id="@+id/cameraCheese"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_marginBottom="12dip"
+        android:layout_gravity="bottom|center"
+        android:background="@android:drawable/ic_menu_camera"
+        android:contentDescription="@string/action_photo_trigger" />
+
+    <!-- Consigne -->
+    <TextView
+        android:id="@+id/cameraInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="@string/instruction_scan_consign"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textSize="14sp"/>
 </FrameLayout>

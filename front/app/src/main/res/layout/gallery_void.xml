@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="24dp">
+
+    <!-- Group 1: Information -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_dialog_info"
+            android:layout_marginBottom="16dp"
+            android:importantForAccessibility="no"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/onboarding_welcome"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="16dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/onboarding_dream_collection_start"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/galleryNameIfVoid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/onboarding_dream_collection_name"
+                android:textColor="?android:attr/colorPrimary"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/onboarding_dream_collection_end"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="32dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Group 2: Void-logo -->
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:contentDescription="@string/app_name"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Group 3: Void-text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/onboarding_no_vehicle_registered"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/onboarding_start_action"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Group 4: Start -->
+    <Button
+        android:id="@+id/btnAddFirstVehicle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_add_vehicle"
+        android:textAllCaps="false"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Group 5: How -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/instruction_start_scan"
+        android:textColor="?android:attr/colorPrimary"
+        android:textStyle="italic"
+        android:layout_marginBottom="16dp"/>
+</LinearLayout>

@@ -1,38 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/headerContainer"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/colorPrimaryDark"
+    android:layout_height="48dip"
+    android:background="?attr/colorPrimarySurface"
     android:baselineAligned="false"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
     android:padding="24dp">
 
     <!-- Logo rond -->
-
-    <FrameLayout
+    <ImageView
+        android:id="@+id/headerAppIcon"
         android:layout_width="@android:dimen/app_icon_size"
         android:layout_height="@android:dimen/app_icon_size"
-        android:layout_marginEnd="12dp">
+        android:layout_marginEnd="12dp"
+        android:layout_gravity="center"
+        android:importantForAccessibility="no"
+        android:src="@mipmap/ic_launcher_round" />
 
-        <ImageView
-            android:id="@+id/logoApp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:importantForAccessibility="no"
-            android:src="@drawable/logo_app" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/circle_header_background" />
-    </FrameLayout>
-
-
-    <!-- Texte -->
-
+    <!-- app-name -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -40,21 +27,36 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/appName"
+            android:id="@+id/headerAppName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textColor="?android:attr/colorBackground"
+            android:textColor="?attr/colorOnPrimarySurface"
             android:textSize="30sp"
             android:textStyle="bold" />
-
         <TextView
-            android:id="@+id/activityDescription"
+            android:id="@+id/headerActivityDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_mission"
-            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:text="@string/appMission"
+            android:textColor="?attr/colorOnPrimarySurface"
             android:textSize="12sp" />
     </LinearLayout>
 
+    <!-- info-space -->
+    <LinearLayout
+        android:id="@+id/headerInfoContainer"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+
+    <!-- activity-buttons -->
+    <LinearLayout
+        android:id="@+id/headerBtnsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone" />
 </LinearLayout>

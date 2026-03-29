@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/photo" />
+
+    <!-- Indication sur la progression -->
+    <TextView
+        android:id="@+id/tvPhotoProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="16dp"
+        android:text="1 / 6"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textSize="14sp"
+        tools:ignore="HardcodedText" />
+
+    <!-- Guides d'alignement -->
+    <!-- Guide vertical (niveau de rotation) -->
+    <SeekBar
+        android:id="@+id/rotateAlignmentGuide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|fill_horizontal"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="75dp"
+        android:alpha="0.7"
+        android:background="?android:attr/colorPrimary"
+        android:clickable="false"
+        android:focusable="false"
+        android:max="100"
+        android:progress="50"
+        android:thumb="@drawable/car_slider" />
+
+    <!-- Guide horizontal (niveau de tangage) -->
+    <SeekBar
+        android:id="@+id/tangageAlignmentGuide"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start|fill_vertical"
+        android:layout_marginBottom="25dp"
+        android:layout_marginVertical="75dp"
+        android:layout_marginStart="25dp"
+        android:alpha="0.7"
+        android:background="?android:attr/colorPrimary"
+        android:clickable="false"
+        android:focusable="false"
+        android:max="100"
+        android:progress="50"
+        android:thumb="@drawable/car_slider"/>
+</FrameLayout>

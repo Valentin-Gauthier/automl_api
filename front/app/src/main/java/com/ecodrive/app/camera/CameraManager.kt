@@ -1,6 +1,9 @@
 package com.ecodrive.app.camera
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -9,11 +12,13 @@ import android.view.Surface
 import android.view.TextureView
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 
 class CameraManager(
     private val context: Context,
+    val requestCamera: Int,
     private val previewUI: TextureView
 ) {
 
@@ -32,7 +37,7 @@ class CameraManager(
      * @param lifecycleOwner  Généralement l'Activity ou le Fragment appelant
      * @param onError         Appelé si la caméra ne peut pas démarrer
      */
-    fun start(
+    private fun baseStart(
         lifecycleOwner: LifecycleOwner,
         onError: (Exception) -> Unit = { Log.e(TAG, "Erreur caméra", it) }
     ) {
@@ -47,6 +52,17 @@ class CameraManager(
             }
         }, ContextCompat.getMainExecutor(context))
     }
+    fun safeStart(
+        activity: Activity,
+        lifecycleOwner: LifecycleOwner,
+        onError: (Exception) -> Unit = { Log.e(TAG, "Erreur caméra", it) }
+    ) {
+        if (hasPermission()) {
+            baseStart(lifecycleOwner, onError)
+        } else {
+            requestCameraPermission(activity)
+        }
+    }
 
     /**
      * Arrête la caméra et libère les ressources.
@@ -54,6 +70,36 @@ class CameraManager(
     fun stop() {
         cameraProvider?.unbindAll()
         isStarted = false
+    }
+
+    fun onRequestPermissionsResult(
+        lifecycleOwner: LifecycleOwner,
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+        onFail: () -> Unit
+    ) {
+        if (requestCode == requestCamera) {
+            if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED)
+                baseStart(lifecycleOwner)
+            else onFail()
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Permissions
+    // -------------------------------------------------------------------------
+
+    private fun hasPermission(): Boolean =
+        ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED
+
+    private fun requestCameraPermission(activity: Activity) {
+        ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.CAMERA),
+            requestCamera
+        )
     }
 
     // =========================================================================

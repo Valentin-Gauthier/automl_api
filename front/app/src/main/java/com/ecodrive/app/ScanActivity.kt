@@ -1,14 +1,9 @@
 package com.ecodrive.app
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.ecodrive.app.camera.CameraManager
 import com.ecodrive.app.camera.PreviewManager
 import com.ecodrive.app.databinding.ActivityScanBinding
@@ -45,14 +40,6 @@ class ScanActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupManagers()
-
-        previewManager.enterImmersiveMode()
-
-        if (hasPermission()) {
-            startCamera()
-        } else {
-            requestCameraPermission()
-        }
     }
 
     override fun onDestroy() {
@@ -70,6 +57,17 @@ class ScanActivity : AppCompatActivity() {
         }, 500)
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        cameraManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults) {
+            goNextActivity("Permission caméra requise pour scanner une plaque")
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Initialisation
     // -------------------------------------------------------------------------
@@ -79,21 +77,14 @@ class ScanActivity : AppCompatActivity() {
         previewManager.setOnClickListener {
             if (!isProcessing) onScanRequested()
         }
-        cameraManager  = CameraManager(this, previewManager.getPreview())
+        cameraManager  = CameraManager(this, REQUEST_CAMERA, previewManager.getPreview())
         textExtractor  = TextExtractor()
-    }
 
-    // -------------------------------------------------------------------------
-    // Caméra
-    // -------------------------------------------------------------------------
+        previewManager.enterImmersiveMode()
 
-    private fun startCamera() {
-        cameraManager.start(
-            lifecycleOwner = this,
-            onError        = { e ->
-                goNextActivity("Impossible d'ouvrir la caméra : ${e.message}")
-            }
-        )
+        cameraManager.safeStart(this, this) {
+            goNextActivity("Impossible d'ouvrir la caméra : ${it.message}")
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -151,42 +142,11 @@ class ScanActivity : AppCompatActivity() {
     }
 
     // -------------------------------------------------------------------------
-    // Permissions
-    // -------------------------------------------------------------------------
-
-    private fun hasPermission(): Boolean =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED
-
-    private fun requestCameraPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.CAMERA),
-            REQUEST_CAMERA
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CAMERA) {
-            if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
-                startCamera()
-            } else {
-                goNextActivity("Permission caméra requise pour scanner une plaque")
-            }
-        }
-    }
-
-    // -------------------------------------------------------------------------
     // Constantes
     // -------------------------------------------------------------------------
 
     companion object {
-        private const val REQUEST_CAMERA   = 100
-        const val EXTRA_PLATE_INFO         = "extra_plate_info"
+        const val REQUEST_CAMERA   = 100
+        const val EXTRA_PLATE_INFO = "extra_plate_info"
     }
 }

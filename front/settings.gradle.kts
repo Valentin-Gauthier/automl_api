@@ -24,4 +24,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Eco-drive"
 include(":app")
- 

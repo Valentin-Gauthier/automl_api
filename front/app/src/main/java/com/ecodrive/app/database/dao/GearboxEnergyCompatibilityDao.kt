@@ -14,6 +14,13 @@ interface GearboxEnergyCompatibilityDao {
     suspend fun insert(gearboxEnergyCompatibility: GearboxEnergyCompatibility)
 
     @Query("""
+        DELETE FROM Gearbox_Energies_compatibilities
+        WHERE GearboxId = :gearboxId
+            AND EnergyId = :energyId
+    """)
+    suspend fun deleteById(gearboxId: Int, energyId: Int)
+
+    @Query("""
         SELECT * FROM Energies
         WHERE id IN (
             SELECT energyId FROM Gearbox_Energies_compatibilities

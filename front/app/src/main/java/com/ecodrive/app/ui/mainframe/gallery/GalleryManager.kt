@@ -1,4 +1,4 @@
-package com.ecodrive.app.mainframe.gallery
+package com.ecodrive.app.ui.mainframe.gallery
 
 import android.app.Activity
 import android.content.Intent
@@ -10,11 +10,10 @@ import android.widget.ScrollView
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import com.ecodrive.app.AddVehicleActivity
 import com.ecodrive.app.R
+import com.ecodrive.app.ScanActivity
 
 class GalleryManager(private val activity: Activity) {
-    private val TAG: String = "GalleryManager"
 
     // -------------------------------------------------------------------------
     // Propriétés
@@ -45,10 +44,8 @@ class GalleryManager(private val activity: Activity) {
         defaultName = galleryName.text.toString()
 
         addVehicleButton.setOnClickListener {
-            val intent = Intent(activity, AddVehicleActivity::class.java)
-                .putExtra(AddVehicleActivity.EXTRA_PLATE, "BG-652-KV")
+            val intent = Intent(activity, ScanActivity::class.java)
             activity.startActivity(intent)
-//TODO:            activity.startActivity(Intent(activity, ScanActivity::class.java))
         }
     }
 
@@ -94,5 +91,9 @@ class GalleryManager(private val activity: Activity) {
             gallery
         }
         galleryContainer.addView(child)
+    }
+
+    companion object {
+        private const val TAG: String = "GalleryManager"
     }
 }

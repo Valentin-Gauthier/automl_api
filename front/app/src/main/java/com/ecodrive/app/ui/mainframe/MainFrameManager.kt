@@ -1,4 +1,4 @@
-package com.ecodrive.app.mainframe
+package com.ecodrive.app.ui.mainframe
 
 import android.app.Activity
 import android.widget.Button
@@ -32,7 +32,7 @@ class MainFrameManager(activity: Activity, currentActivityId: FooterTab) {
     }
 
     fun unactiveName(visible: Boolean): HeaderManager {
-        return unactiveName(visible)
+        return headerManager.unactiveName(visible)
     }
 
     fun unactiveLogo(visible: Boolean): HeaderManager {

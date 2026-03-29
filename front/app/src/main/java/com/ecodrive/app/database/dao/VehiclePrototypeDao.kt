@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface VehiclePrototypeDao {
     @Insert
-    suspend fun insert(vehiclePrototype: VehiclePrototype)
+    suspend fun insert(vehiclePrototype: VehiclePrototype): Long
+
+    @Query("DELETE FROM Vehicle_prototypes WHERE id = :id")
+    suspend fun deleteById(id: Int)
 
     @Query("SELECT * FROM Vehicle_prototypes")
     fun getAll(): Flow<List<VehiclePrototype>>

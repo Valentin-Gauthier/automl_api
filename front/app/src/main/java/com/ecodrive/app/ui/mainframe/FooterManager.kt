@@ -1,4 +1,4 @@
-package com.ecodrive.app.mainframe
+package com.ecodrive.app.ui.mainframe
 
 import android.app.Activity
 import android.content.Intent

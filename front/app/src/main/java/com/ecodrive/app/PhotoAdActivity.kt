@@ -1,48 +1,50 @@
 package com.ecodrive.app
 
+import android.annotation.SuppressLint
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.ecodrive.app.camera.CameraManager
+import com.ecodrive.app.camera.PreviewManager
+import kotlin.math.abs
 
-class PhotoAdActivity : AppCompatActivity() {
-    /*
+class PhotoAdActivity : AppCompatActivity(), SensorEventListener {
 
     // -------------------------------------------------------------------------
     // Propriétés
     // -------------------------------------------------------------------------
 
-    private lateinit var binding: ActivityScanBinding
-
     // Managers des sous-composants
     private lateinit var cameraManager: CameraManager
     private lateinit var previewManager: PreviewManager
 
-    // Alignment guides
-    private lateinit var rotateAlignmentGuide: SeekBar
-    private lateinit var tangageAlignmentGuide: SeekBar
+    // Composant définis dans le layout
+    private lateinit var tvProgress: TextView
+    private lateinit var rotateGuide: SeekBar
+    private lateinit var pitchGuide: SeekBar
 
-    // Sensors
+    // Capteurs de mouvement
     private lateinit var sensorManager: SensorManager
     private var accelerometer: Sensor? = null
-    private var magnetometer: Sensor? = null
-    private var lastAccelerometerReading = FloatArray(3)
-    private var lastMagnetometerReading = FloatArray(3)
-    private var rotationMatrix = FloatArray(9)
-    private var orientationAngles = FloatArray(3)
+    private var magnetometer: Sensor?  = null
 
-    // Photo storage
-    private var currentPhotoName: String = ""
-    private var currentPhotoIndex: Int = 0
-    private val photoInstructions = listOf(
-        "Prenez une photo de face du véhicule, centré et bien éclairé.",
-        "Prenez une photo de l'arrière du véhicule, centré et bien éclairé.",
-        "Prenez une photo du côté conducteur, en incluant les roues.",
-        "Prenez une photo du côté passager, en incluant les roues.",
-        "Prenez une photo de l'intérieur (tableau de bord et sièges avant).",
-        "Prenez une photo du compteur kilométrique."
-    )
-*/
-    /** Empêche un double appui sur le bouton pendant un traitement en cours */
+    private val accel = FloatArray(3)
+    private val magnet = FloatArray(3)
+    private val rotationMatrix = FloatArray(9)
+    private val orientation = FloatArray(3)
+
+    // State
+    private var currentIndex = 0
     private var isProcessing = false
+    private var vehiclePath: String? = null
 
     // -------------------------------------------------------------------------
     // Cycle de vie
@@ -50,243 +52,166 @@ class PhotoAdActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-/*
-        binding = ActivityScanBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_photo_ad)
 
-        previewManager = PreviewManager(this)
-        previewManager.setOnClickListener {
-            if (!isProcessing) onPhotoRequested()
+        vehiclePath = intent.getStringExtra(EXTRA_VEHICLE_PATH)
+        if (vehiclePath == null) {
+            abort("Dossier de sauvegarde invalide")
+            return
         }
-        cameraManager  = CameraManager(this, previewManager.getPreview())
 
-        // Initialize UI components
-        rotateAlignmentGuide = findViewById(R.id.rotateAlignmentGuide)
-        tangageAlignmentGuide = findViewById(R.id.tangageAlignmentGuide)
+        currentIndex = intent.getIntExtra(EXTRA_INDEX, 0)
 
-        // Initialize sensors
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        bindViews()
+        setupCamera()
+        rotateGuide.visibility = View.GONE
+        pitchGuide.visibility = View.GONE
+        setupSensors()
 
-        // Set initial instruction
-        updateInstruction()
-
-        previewManager.enterImmersiveMode()
-
-        if (hasPermission()) {
-            startCamera()
-        } else {
-            requestCameraPermission()
-        }
- */
-    }
-/*
-    override fun onDestroy() {
-        super.onDestroy()
-        cameraManager.stop()
-        textExtractor.release()
+        updateUI()
     }
 
     override fun onResume() {
         super.onResume()
-        // Register sensor listeners
-        accelerometer?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
-        }
-        magnetometer?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
-        }
+        accelerometer?.also { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
+        magnetometer?.also  { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
     }
 
     override fun onPause() {
         super.onPause()
-        // Unregister sensor listeners
         sensorManager.unregisterListener(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
+        cameraManager.stop()
     }
 
-    private fun startCamera() {
-        cameraExecutor = Executors.newSingleThreadExecutor()
+    private fun abort(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+        window.decorView.postDelayed({ finish() }, 500)
+    }
 
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
+    // -------------------------------------------------------------------------
+    // Initialisation
+    // -------------------------------------------------------------------------
 
-            // Preview use case
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(cameraPreview.surfaceProvider)
-                }
+    private fun bindViews() {
+        tvProgress  = findViewById(R.id.tvPhotoProgress)
+        rotateGuide = findViewById(R.id.rotateAlignmentGuide)
+        pitchGuide  = findViewById(R.id.tangageAlignmentGuide)
+    }
 
-            // Image capture use case
-            imageCapture = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-                .build()
+    private fun setupCamera() {
+        Thread {
+            Log.d(TAG, "Obtention dela caméra.")
+            previewManager = PreviewManager(this)
+            Log.d(TAG, "Connection de la caméra l'UI.")
+            cameraManager = CameraManager(this, REQUEST_CAMERA, previewManager.getPreview())
 
-            // Select back camera
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                // Unbind all use cases before rebinding
-                cameraProvider.unbindAll()
-
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture
-                )
-            } catch (exc: Exception) {
-                Toast.makeText(this, "Erreur lors de l'ouverture de la caméra", Toast.LENGTH_SHORT).show()
+            previewManager.setOnClickListener {
+                if (!isProcessing) takePhoto()
             }
-        }, ContextCompat.getMainExecutor(this))
+
+            previewManager.enterImmersiveMode()
+            Log.d(TAG, "Allumage de la caméra.")
+            cameraManager.safeStart(this, this) {
+                abort("Impossible d'ouvrir la caméra : ${it.message}")
+            }
+        }.start()
     }
+
+    private fun setupSensors() {
+        Thread {
+            Log.d(TAG, "Allumage des capteurs de mesures gyroscopiques et accélérométries.")
+            sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            magnetometer  = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+
+            Log.d(TAG, "Affichage des résultats des capteurs.")
+            rotateGuide.visibility = View.VISIBLE
+            pitchGuide.visibility = View.VISIBLE
+        }.start()
+    }
+
+    // -------------------------------------------------------------------------
+    // Caméra
+    // -------------------------------------------------------------------------
 
     private fun takePhoto() {
-        // Create output file
-        val photoFile = createPhotoFile()
+        if (!cameraManager.isReady) return
 
-        // Set up image capture metadata
-        val metadata = ImageCapture.Metadata().apply {
-            // Mirror image if using front camera
-            isReversedHorizontal = false
-        }
+        isProcessing = true
 
-        // Set up image capture listener
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
-            .setMetadata(metadata)
-            .build()
+        cameraManager.capture(
+            onSuccess = {
+                runOnUiThread {
+                    isProcessing = false
+                    currentIndex++
 
-        // Take the picture
-        imageCapture.takePicture(
-            outputOptions,
-            cameraExecutor,
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    runOnUiThread {
-                        Toast.makeText(this@PhotoAdActivity, "Photo sauvegardée", Toast.LENGTH_SHORT).show()
-                        currentPhotoIndex++
-                        if (currentPhotoIndex < photoInstructions.size) {
-                            updateInstruction()
-                        } else {
-                            finish()
-                        }
+                    if (currentIndex >= PHOTO_INSTRUCTIONS.size) {
+                        Toast.makeText(this, "Photos terminées ✔", Toast.LENGTH_LONG).show()
+                        finish()
+                    } else {
+                        updateUI()
+                        Toast.makeText(this, "Photo $currentIndex prise ✔", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-                override fun onError(exception: ImageCaptureException) {
-                    runOnUiThread {
-                        Toast.makeText(this@PhotoAdActivity, "Erreur lors de la prise de photo", Toast.LENGTH_SHORT).show()
-                    }
+            },
+            onError = {
+                runOnUiThread {
+                    isProcessing = false
+                    Toast.makeText(this, "Erreur capture", Toast.LENGTH_SHORT).show()
                 }
             }
         )
     }
 
-    private fun createPhotoFile(): File {
-        // Get vehicle name from intent (or use default)
-        val vehicleName = intent.getStringExtra("vehicleName") ?: "vehicle_${System.currentTimeMillis()}"
+    // -------------------------------------------------------------------------
+    // UI
+    // -------------------------------------------------------------------------
 
-        // Create time-stamped filename
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
-        currentPhotoName = "${vehicleName}_${timeStamp}_${currentPhotoIndex}"
-
-        // Get or create the photos directory
-        val storageDir = File(
-            getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            "vehiclesphoto"
-        )
-        if (!storageDir.exists()) {
-            storageDir.mkdirs()
-        }
-
-        return File(storageDir, "$currentPhotoName.jpg")
+    @SuppressLint("SetTextI18n")
+    private fun updateUI() {
+        tvProgress.text = "${currentIndex + 1} / ${PHOTO_INSTRUCTIONS.size}"
+        previewManager.write(PHOTO_INSTRUCTIONS[currentIndex])
     }
 
-    private fun updateInstruction() {
-        tvInstruction.text = photoInstructions[currentPhotoIndex]
+    // -------------------------------------------------------------------------
+    // Capteurs d'orientation
+    // -------------------------------------------------------------------------
 
-        // Update alignment guides visibility based on instruction
-        when (currentPhotoIndex) {
-            0, 1 -> { // Front and back photos - need precise alignment
-                rotateAlignmentGuide.visibility = View.VISIBLE
-                tangageAlignmentGuide.visibility = View.VISIBLE
-            }
-            2, 3 -> { // Side photos - less strict alignment
-                rotateAlignmentGuide.visibility = View.VISIBLE
-                tangageAlignmentGuide.visibility = View.INVISIBLE
-            }
-            4, 5 -> { // Interior photos - alignment not critical
-                rotateAlignmentGuide.visibility = View.INVISIBLE
-                tangageAlignmentGuide.visibility = View.INVISIBLE
-            }
-        }
-    }
-
-    // SensorEventListener implementation
     override fun onSensorChanged(event: SensorEvent) {
         when (event.sensor.type) {
-            Sensor.TYPE_ACCELEROMETER -> {
-                System.arraycopy(event.values, 0, lastAccelerometerReading, 0, event.values.size)
-            }
-            Sensor.TYPE_MAGNETIC_FIELD -> {
-                System.arraycopy(event.values, 0, lastMagnetometerReading, 0, event.values.size)
-            }
+            Sensor.TYPE_ACCELEROMETER ->
+                System.arraycopy(event.values, 0, accel, 0, 3)
+            Sensor.TYPE_MAGNETIC_FIELD ->
+                System.arraycopy(event.values, 0, magnet, 0, 3)
         }
 
-        // Update orientation angles
-        SensorManager.getRotationMatrix(
-            rotationMatrix,
-            null,
-            lastAccelerometerReading,
-            lastMagnetometerReading
-        )
-        SensorManager.getOrientation(rotationMatrix, orientationAngles)
+        if (SensorManager.getRotationMatrix(rotationMatrix, null, accel, magnet)) {
+            SensorManager.getOrientation(rotationMatrix, orientation)
 
-        // Update alignment guides based on device orientation
-        updateAlignmentGuides()
+            val pitch = Math.toDegrees(orientation[1].toDouble()).toFloat()
+            val roll  = Math.toDegrees(orientation[2].toDouble()).toFloat()
+
+            updateGuides(pitch, roll)
+        }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-        // Not needed for this implementation
-    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
-    private fun updateAlignmentGuides() {
-        // Convert radians to degrees
-        val azimuthDegrees = Math.toDegrees(orientationAngles[0].toDouble()).toFloat()
-        val pitchDegrees = Math.toDegrees(orientationAngles[1].toDouble()).toFloat()
-        val rollDegrees = Math.toDegrees(orientationAngles[2].toDouble()).toFloat()
+    private fun updateGuides(pitch: Float, roll: Float) {
+        rotateGuide.progress = (50 + roll).toInt().coerceIn(0, 100)
+        rotateGuide.alpha    = 1f - (abs(roll) / 45f).coerceAtMost(1f)
 
-        // Update rotation guide (azimuth - left/right tilt)
-        val rotationProgress = (50 + (azimuthDegrees / 2)).toInt().coerceIn(0, 100)
-        rotateAlignmentGuide.progress = rotationProgress
-        rotateAlignmentGuide.alpha = 1 - (Math.abs(azimuthDegrees) / 45).coerceAtMost(1f)
-
-        // Update tangage guide (pitch - forward/backward tilt)
-        val tangageProgress = (50 + (pitchDegrees / 2)).toInt().coerceIn(0, 100)
-        tangageAlignmentGuide.progress = tangageProgress
-        tangageAlignmentGuide.alpha = 1 - (Math.abs(pitchDegrees) / 30).coerceAtMost(1f)
+        pitchGuide.progress = (50 + pitch).toInt().coerceIn(0, 100)
+        pitchGuide.alpha    = 1f - (abs(pitch) / 30f).coerceAtMost(1f)
     }
 
     // -------------------------------------------------------------------------
-    // Permissions
+    // Permissions caméra
     // -------------------------------------------------------------------------
-
-    private fun hasPermission(): Boolean =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED
-
-    private fun requestCameraPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.CAMERA),
-            REQUEST_CAMERA
-        )
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -294,21 +219,29 @@ class PhotoAdActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CAMERA) {
-            if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
-                startCamera()
-            } else {
-                goNextActivity("Permission caméra requise pour scanner une plaque")
-            }
+        cameraManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults) {
+            abort("Permission caméra requise pour prendre en photo le véhicule.")
         }
     }
- */
 
     // -------------------------------------------------------------------------
     // Constantes
     // -------------------------------------------------------------------------
 
     companion object {
-        private const val REQUEST_CAMERA   = 100
+        private const val TAG = "Take photo for ad activity"
+        const val REQUEST_CAMERA = 100
+        const val EXTRA_VEHICLE_PATH = "extra_vehicle_path"
+        const val EXTRA_INDEX        = "extra_index"
+
+        private val PHOTO_INSTRUCTIONS = listOf(
+            "Vue de face, centré et bien éclairé.",
+            "Vue de l'arrière, centré et bien éclairé.",
+            "Côté conducteur, roues visibles.",
+            "Côté passager, roues visibles.",
+            "Intérieur : tableau de bord et sièges.",
+            "Compteur kilométrique."
+        )
+        val size get() = PHOTO_INSTRUCTIONS.size
     }
 }

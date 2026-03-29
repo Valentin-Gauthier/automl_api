@@ -10,7 +10,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface VehicleInListDao {
     @Insert
-    suspend fun insert(vehicleInList: VehicleInList)
+    suspend fun insert(vehicleInList: VehicleInList): Long
+
+    @Query("""
+        DELETE FROM Vehicles_in_Lists
+        WHERE immatriculation = :immatriculation
+            AND ListId = :listId
+    """)
+    suspend fun deleteById(immatriculation: String, listId: Int)
 
     @Query("""
         SELECT * FROM Vehicles

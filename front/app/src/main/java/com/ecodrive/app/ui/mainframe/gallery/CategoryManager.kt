@@ -1,4 +1,4 @@
-package com.ecodrive.app.mainframe.gallery
+package com.ecodrive.app.ui.mainframe.gallery
 
 import android.app.Activity
 import android.util.Log

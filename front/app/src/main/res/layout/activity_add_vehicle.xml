@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".AddVehicleActivity">
+    android:orientation="vertical">
 
     <!-- Header fixe -->
     <include layout="@layout/header" />
@@ -30,7 +28,8 @@
                 android:text="@string/vehicle_identity"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"/>
 
             <EditText
                 android:id="@+id/vehicleBrand"
@@ -53,14 +52,40 @@
                 android:minHeight="48dp" />
 
             <EditText
-                android:id="@+id/vehicleDate"
+                android:id="@+id/vehicleVersion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="date"
-                android:hint="@string/vehicle_date"
+                android:autofillHints="version"
+                android:hint="@string/vehicle_version"
                 android:importantForAutofill="yes"
-                android:inputType="date"
+                android:inputType="text"
                 android:minHeight="48dp" />
+
+            <!-- Date : bouton système -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/vehicleDateBtn"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vehicle_date_picker_btn"
+                    android:textAllCaps="false"/>
+
+                <TextView
+                    android:id="@+id/vehicleDateDisplay"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:hint="@string/vehicle_date_placeholder"
+                    android:textSize="15sp"/>
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/vehicleColor"
@@ -68,6 +93,26 @@
                 android:layout_height="wrap_content"
                 android:autofillHints="color"
                 android:hint="@string/vehicle_color"
+                android:importantForAutofill="yes"
+                android:inputType="text"
+                android:minHeight="48dp" />
+
+            <EditText
+                android:id="@+id/vehicleVin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="vin"
+                android:hint="@string/vehicle_vin"
+                android:importantForAutofill="yes"
+                android:inputType="text"
+                android:minHeight="48dp" />
+
+            <EditText
+                android:id="@+id/vehicleCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="countryCode"
+                android:hint="@string/vehicle_country"
                 android:importantForAutofill="yes"
                 android:inputType="text"
                 android:minHeight="48dp" />
@@ -82,24 +127,32 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vehicle_energy_type"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="2dp"/>
             <Spinner
                 android:id="@+id/vehicleEnergyType"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="energyType"
-                android:hint="@string/vehicle_energy_type"
-                android:importantForAutofill="yes"
-                android:minHeight="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
                 android:spinnerMode="dropdown" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vehicle_gearbox_type"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="2dp"/>
             <Spinner
                 android:id="@+id/vehicleGearboxType"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="gearboxType"
-                android:hint="@string/vehicle_gearbox_type"
-                android:importantForAutofill="yes"
-                android:minHeight="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
                 android:spinnerMode="dropdown" />
 
             <EditText
@@ -112,16 +165,152 @@
                 android:inputType="number"
                 android:minHeight="48dp" />
 
+            <!-- Group power -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/vehiclePowerKw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="powerKiloWatt"
+                    android:hint="@string/vehicle_power_kw"
+                    android:importantForAutofill="yes"
+                    android:inputType="text"
+                    android:minHeight="48dp" />
+
+                <EditText
+                    android:id="@+id/vehiclePowerHp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="powerHP"
+                    android:hint="@string/vehicle_power_hp"
+                    android:importantForAutofill="yes"
+                    android:inputType="text"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <!-- Group carrosserie -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ui_important_information_note"
+                android:text="@string/vehicle_body_section"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vehicle_body_type"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="2dp"/>
+            <Spinner
+                android:id="@+id/vehicleBodyType"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vehicle_genre_type"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginBottom="2dp"/>
+            <Spinner
+                android:id="@+id/vehicleGenreType"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:spinnerMode="dropdown" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/vehicleDoors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="numberOfDoors"
+                    android:hint="@string/vehicle_doors"
+                    android:importantForAutofill="yes"
+                    android:inputType="text"
+                    android:minHeight="48dp" />
+
+                <EditText
+                    android:id="@+id/vehiclePassengers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="numberOfPassengers"
+                    android:hint="@string/vehicle_passengers"
+                    android:importantForAutofill="yes"
+                    android:inputType="text"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <!-- Group poids ET puissance -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/vehicle_weight_section"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/vehicleWeightKg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="weightKg"
+                    android:hint="@string/vehicle_weight_kg"
+                    android:importantForAutofill="yes"
+                    android:inputType="text"
+                    android:minHeight="48dp" />
+
+                <EditText
+                    android:id="@+id/vehicleGrossWeightKg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="grossWeightKg"
+                    android:hint="@string/vehicle_gross_weight_kg"
+                    android:importantForAutofill="yes"
+                    android:inputType="text"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/vehicleFuelTank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="fuelTank"
+                android:hint="@string/vehicle_fuel_tank"
+                android:importantForAutofill="yes"
+                android:inputType="text"
+                android:minHeight="48dp" />
+
             <!-- Group Kilométrage -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,6 +329,15 @@
                 android:thumb="@drawable/car_slider"
                 android:hint="@string/ui_mileage_slider_thumb"
                 android:importantForAutofill="yes"/>
+            <!-- Valeur du kilométrage au-dessus du slider -->
+            <TextView
+                android:id="@+id/mileageValueText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
 
             <TextView
                 android:layout_width="wrap_content"

@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.ecodrive.app.database.AppDatabase
-import com.ecodrive.app.mainframe.gallery.CategoryManager
-import com.ecodrive.app.mainframe.FooterTab
-import com.ecodrive.app.mainframe.MainFrameManager
+import com.ecodrive.app.ui.mainframe.gallery.CategoryManager
+import com.ecodrive.app.ui.mainframe.FooterTab
+import com.ecodrive.app.ui.mainframe.MainFrameManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,13 +16,11 @@ class MainActivity : AppCompatActivity() {
     // -------------------------------------------------------------------------
 
     // Managers des sous-composants
-    private lateinit var frameManager: MainFrameManager
+    private lateinit var frameManager:   MainFrameManager
     private lateinit var galleryManager: CategoryManager
 
     // Configuration de l'activité.
-    private var gallerySize: Int = 2
     private var isAppReady = false
-
     private var db: AppDatabase? = null
 
     // -------------------------------------------------------------------------
@@ -34,21 +32,27 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         splash.setKeepOnScreenCondition { !isAppReady }
-        initAppComponents()
         //enableEdgeToEdge() Envoi l'application sous les barres système (en haut et en bas).
 
         setContentView(R.layout.activity_main)
-        frameManager = MainFrameManager(this, FooterTab.HOME)
+        frameManager   = MainFrameManager(this, FooterTab.HOME)
         galleryManager = CategoryManager(this)
 
-        galleryManager.refresh(emptyList(), 0, gallerySize)
+        val gallerySize = getSharedPreferences(SettingsActivity.PREFS_NAME, MODE_PRIVATE)
+            .getInt(SettingsActivity.KEY_GALLERY_SIZE, SettingsActivity.DEFAULT_GALLERY_SIZE)
+        initAppComponents(gallerySize)
     }
 
-    private fun initAppComponents() {
+    private fun initAppComponents(gallerySize: Int) {
         Thread {
-            Log.d("EcoDrive", "Connect to local bdd.")
+            Log.d("EcoDrive", "Connexion à la base de données locale.")
             db = AppDatabase.getDatabase(this)
-            Log.d("EcoDrive", "Ready for used.")
+            Log.d("EcoDrive", "Base de données prête.")
+
+            Log.d("EcoDrive", "Chargement de la première catégorie de la gallery.")
+            runOnUiThread {
+                galleryManager.refresh(emptyList(), 0, gallerySize)
+            }
             isAppReady = true
         }.start()
     }

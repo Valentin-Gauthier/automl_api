@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/fullscreenBackgroundColor"
+    android:theme="@style/ThemeOverlay.Ecodrive.FullscreenContainer"
+    tools:context=".ScanActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- Import du camera layout. Ids:
+        cameraPreview
+        cameraCheese
+        cameraInstruction
+    -->
+    <include layout="@layout/photo"/>
+
+    <!-- Marque d'alignement bleue à gauche -->
+    <View
+        android:id="@+id/leftBlueMark"
+        android:layout_width="32dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="64dp"
+        android:background="#4285F4"/>
+
+    <!-- Marque d'alignement bleue à droite -->
+    <View
+        android:id="@+id/rightBlueMark"
+        android:layout_width="32dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="64dp"
+        android:background="#4285F4"/>
+
+</FrameLayout>

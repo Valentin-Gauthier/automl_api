@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:foreground="?android:attr/selectableItemBackground"
@@ -8,13 +7,13 @@
     android:focusable="true">
 
     <!-- Image du véhicule en arrière-plan -->
-<!--    <ImageView
+    <ImageView
         android:id="@+id/vehicleImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:contentDescription="@string/vehicle_model"/>
--->
+
     <!-- Logo de la brand (en haut) -->
     <ImageView
         android:id="@+id/vehicleBrandLogo"

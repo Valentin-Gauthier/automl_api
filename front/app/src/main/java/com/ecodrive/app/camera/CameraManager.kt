@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.SurfaceTexture
 import android.util.Log
 import android.view.Surface
 import android.view.TextureView
@@ -70,7 +71,19 @@ class CameraManager(
         onError: (Exception) -> Unit = { Log.e(TAG, "Erreur caméra", it) }
     ) {
         if (hasPermission()) {
-            baseStart(lifecycleOwner, onError)
+            if (previewUI.isAvailable) {
+                baseStart(lifecycleOwner, onError)
+            } else {
+                previewUI.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
+                    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                        baseStart(lifecycleOwner, onError)
+                        previewUI.surfaceTextureListener = null // remove listener after start
+                    }
+                    override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) {}
+                    override fun onSurfaceTextureDestroyed(st: SurfaceTexture) = true
+                    override fun onSurfaceTextureUpdated(st: SurfaceTexture) {}
+                }
+            }
         } else {
             requestCameraPermission(activity)
         }
@@ -140,15 +153,24 @@ class CameraManager(
         onSuccess: (Bitmap) -> Unit,
         onError: (Exception) -> Unit = { Log.e(TAG, "Erreur capture", it) }
     ) {
-        val capture = imageCapture ?: run {
-            onError(IllegalStateException("Caméra non démarrée"))
+        Log.d(TAG, "Test if camera has launched")
+        if (!isReady) {
+            onError(IllegalStateException("Caméra non prête ou TextureView non disponible"))
+            return
+        }
+        if (!previewUI.isAvailable) {
+            onError(IllegalStateException("TextureView non disponible"))
             return
         }
 
+        val capture = imageCapture!!
+
+        Log.d(TAG, "Try capture one image in camera stream")
         capture.takePicture(
             ContextCompat.getMainExecutor(context),
             object : ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                    Log.d(TAG, "One image has been captured")
                     try {
                         val bitmap = imageProxyToBitmap(imageProxy)
                         onSuccess(bitmap)
@@ -160,10 +182,12 @@ class CameraManager(
                 }
 
                 override fun onError(exception: ImageCaptureException) {
+                    Log.d(TAG, "No image was captured")
                     onError(exception)
                 }
             }
         )
+        Log.d(TAG, "End try to capture image.")
     }
 
     // =========================================================================

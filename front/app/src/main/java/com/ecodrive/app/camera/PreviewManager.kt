@@ -33,6 +33,22 @@ class PreviewManager(private val activity: Activity) {
         return preview
     }
 
+    fun inactivatedTrigger() {
+        cheese.isActivated = false
+    }
+
+    fun activatedTrigger() {
+        cheese.isActivated = true
+    }
+    val isActivated: Boolean
+        get() = cheese.isActivated
+
+    // =========================================================================
+    // Initialisation
+    // =========================================================================
+
+    init { inactivatedTrigger() }
+
     // =========================================================================
     // Mode immersif
     // =========================================================================

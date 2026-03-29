@@ -33,12 +33,12 @@
             android:exported="false" />
         <activity
             android:name=".PhotoAdActivity"
-            android:exported="false" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.Ecodrive.Fullscreen" />
         <activity
             android:name=".PredictActivity"
-            android:exported="false"
-            android:label="@string/title_activity_predict"
-            android:theme="@style/Theme.Ecodrive" />
+            android:exported="false" />
         <activity
             android:name=".AddVehicleActivity"
             android:exported="false" />
@@ -46,7 +46,6 @@
             android:name=".ScanActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:label="@string/title_activity_scan"
             android:theme="@style/Theme.Ecodrive.Fullscreen" />
         <activity
             android:name=".MainActivity"
@@ -54,10 +53,8 @@
             android:theme="@style/Theme.Ecodrive.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

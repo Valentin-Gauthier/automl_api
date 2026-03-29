@@ -1,5 +1,6 @@
 package com.ecodrive.app
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -102,50 +103,90 @@ class PredictActivity : AppCompatActivity() {
         btnAddToList.setOnClickListener         { openAddToList() }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun predict() {
-        //TODO: Prepare automl API Request
-        //...
-        val url = URL("https://exemple.com")
+        // Si vehicle est null, on annule tout
+        val vehicleData = vehicle ?: return
+
+        // 1. L'URL propre (Vérifie si c'est / ou /predict dans ton main.py)
+        val url = URL("http://10.0.2.2:8000/predict/")
+
         executor.execute {
             try {
-                val conn = (url.openConnection() as HttpURLConnection).apply {
-                    requestMethod  = "POST"
-                    connectTimeout = 10_000
-                    readTimeout    = 10_000
-                    setRequestProperty("Accept", "application/json")
+                // 2. Création du corps JSON (Le fameux Body)
+                val jsonBody = JSONObject().apply {
+                    put("brand", vehicleData.brandName)
+                    put("model", vehicleData.modelName)
+                    put("age", vehicleData.year ?: 2024)
+                    put("kms", vehicleData.mileage)
+                    put("fuel_type", vehicleData.energy.label)
+                    put("transmission", vehicleData.gearboxType.label)
+                    put("ext_col", vehicleData.color)
+                    put("int_col", vehicleData.color)
+                    put("accident", "None")
+                    put("clean_title", "Yes")
+                    put("engine_hp", vehicleData.powerHp)
+                    put("engine_liters", vehicleData.fuelTankCapacityLiters)
+                    put("engine_cyl", 0.0)
                 }
 
+                // 3. Configuration de la requête
+                val conn = (url.openConnection() as HttpURLConnection).apply {
+                    requestMethod = "POST"
+                    connectTimeout = 10_000
+                    readTimeout = 10_000
+                    setRequestProperty("Content-Type", "application/json; charset=UTF-8") // On prévient l'API que c'est du JSON
+                    setRequestProperty("Accept", "application/json")
+                    doOutput = true // On autorise l'envoi de données dans le Body
+                }
+
+                // 4. Envoi du JSON à ton API FastAPI
+                conn.outputStream.use { os ->
+                    val input = jsonBody.toString().toByteArray(Charsets.UTF_8)
+                    os.write(input, 0, input.size)
+                }
+
+                // 5. Vérification de la réponse
                 val code = conn.responseCode
-                if (code != 200) throw Exception("HTTP $code")
+                if (code != 200) {
+                    // Astuce : On lit le message d'erreur de FastAPI (le code 422 par exemple)
+                    val errorMsg = conn.errorStream?.bufferedReader()?.readText()
+                    throw Exception("HTTP $code : $errorMsg")
+                }
 
                 val body = conn.inputStream.bufferedReader().readText()
                 conn.disconnect()
 
                 val json = JSONObject(body)
-                // L'API renvoie { "success" : false } si non trouvé
-                if (!json.optBoolean("success", true)) {
-                    abort("Échec de l'évaluation du véhicule $json")
+
+                // 6. On s'adapte à TA réponse Python : {"status" : "sucess"}
+                if (json.optString("status") != "sucess") {
+                    abort("Échec de l'évaluation du véhicule")
                     return@execute
                 }
 
-                // Certaines APIs encapsulent dans "data", d'autres non
-                val data = if (json.has("data")) json.getJSONObject("data") else json
+                // On récupère le prix (ton API renvoie un float, donc on lit un Double en Kotlin)
+                val estimated_price = json.getDouble("estimated_price")
+                val error_estimation = 0.1 * estimated_price
 
+                // 7. 🚨 MODIFICATION UI : Doit se faire sur le thread principal !
+                runOnUiThread {
+                    // On convertit en Int pour l'affichage (pas de centimes)
+                    usedPriceMin.text = (estimated_price - error_estimation).toInt().toString()
+                    usedPriceMax.text = (estimated_price + error_estimation).toInt().toString()
+                    newPriceMin.text  = (estimated_price - error_estimation).toInt().toString()
+                    newPriceMax.text  = (estimated_price + error_estimation).toInt().toString()
 
-                //TODO: Prepare AutomlAPI response
-                usedPriceMin.text = data.getString("usedPriceMin") ?: "UNK"
-                usedPriceMax.text = data.getString("usedPriceMax") ?: "UNK"
-                newPriceMin.text  = data.getString("newPriceMin") ?: "UNK"
-                newPriceMax.text  = data.getString("newPriceMax") ?: "UNK"
+                    usedPriceMin.visibility = View.VISIBLE
+                    usedPriceMax.visibility = View.VISIBLE
+                    newPriceMin.visibility  = View.VISIBLE
+                    newPriceMax.visibility  = View.VISIBLE
+                }
 
-                // Show AutomlAPI response
-                usedPriceMin.visibility = View.VISIBLE
-                usedPriceMax.visibility = View.VISIBLE
-                newPriceMin.visibility  = View.VISIBLE
-                newPriceMax.visibility  = View.VISIBLE
             } catch (e: Exception) {
-                abort("Erreur réseau : ${e.message}")
-                return@execute
+                runOnUiThread {
+                    abort("Erreur réseau : ${e.message}")
+                }
             }
         }
     }

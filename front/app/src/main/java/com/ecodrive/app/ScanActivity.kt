@@ -2,6 +2,7 @@ package com.ecodrive.app
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ecodrive.app.camera.CameraManager
@@ -75,6 +76,11 @@ class ScanActivity : AppCompatActivity() {
     private fun setupManagers() {
         previewManager = PreviewManager(this)
         previewManager.setOnClickListener {
+            Log.d(TAG,
+                "User querry plate analysis. " + (
+                        if (isProcessing) "Already in process"
+                        else "Launch analysis")
+            )
             if (!isProcessing) onScanRequested()
         }
         cameraManager  = CameraManager(this, REQUEST_CAMERA, previewManager.getPreview())
@@ -146,6 +152,7 @@ class ScanActivity : AppCompatActivity() {
     // -------------------------------------------------------------------------
 
     companion object {
+        private const val TAG = "ScanActivity"
         const val REQUEST_CAMERA   = 100
         const val EXTRA_PLATE_INFO = "extra_plate_info"
     }

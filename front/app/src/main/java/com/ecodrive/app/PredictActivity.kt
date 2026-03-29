@@ -21,6 +21,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.core.net.toUri
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.concurrent.Executors
 
 class PredictActivity : AppCompatActivity() {
 
@@ -53,6 +57,7 @@ class PredictActivity : AppCompatActivity() {
 
     private var vehicle: VehicleInformation? = null
     private var plate:   PlateInformation?   = null
+    private val executor = Executors.newSingleThreadExecutor()
 
     // -------------------------------------------------------------------------
     // Cycle de vie
@@ -77,20 +82,77 @@ class PredictActivity : AppCompatActivity() {
         plate   = intentParcelable(EXTRA_PLATE, PlateInformation::class.java)
         vehicle = intentParcelable(EXTRA_VEHICLE, VehicleInformation::class.java)
 
+        usedPriceMin.visibility = View.GONE
+        usedPriceMax.visibility = View.GONE
+        newPriceMin.visibility  = View.GONE
+        newPriceMax.visibility  = View.GONE
+        var predictible = false
         vehicle?.let { v ->
             if (v.brandName.isNotBlank() && v.modelName.isNotBlank()) {
-                //TODO: Automl prediction with this informations
-            } else {
-                usedPriceMin.visibility = View.GONE
-                usedPriceMax.visibility = View.GONE
-                newPriceMin.visibility  = View.GONE
-                newPriceMax.visibility  = View.GONE
+                predictible = true
             }
         }
+        if (predictible)
+            predict()
+        else
+            abort("Aucun véhicule à évaluer.")
 
         btnFindNearestGarage.setOnClickListener { openNearestGarage() }
         btnPrepareAd.setOnClickListener         { openAdMaker() }
         btnAddToList.setOnClickListener         { openAddToList() }
+    }
+
+    private fun predict() {
+        //TODO: Prepare automl API Request
+        //...
+        val url = URL("https://exemple.com")
+        executor.execute {
+            try {
+                val conn = (url.openConnection() as HttpURLConnection).apply {
+                    requestMethod  = "POST"
+                    connectTimeout = 10_000
+                    readTimeout    = 10_000
+                    setRequestProperty("Accept", "application/json")
+                }
+
+                val code = conn.responseCode
+                if (code != 200) throw Exception("HTTP $code")
+
+                val body = conn.inputStream.bufferedReader().readText()
+                conn.disconnect()
+
+                val json = JSONObject(body)
+                // L'API renvoie { "success" : false } si non trouvé
+                if (!json.optBoolean("success", true)) {
+                    abort("Échec de l'évaluation du véhicule $json")
+                    return@execute
+                }
+
+                // Certaines APIs encapsulent dans "data", d'autres non
+                val data = if (json.has("data")) json.getJSONObject("data") else json
+
+
+                //TODO: Prepare AutomlAPI response
+                usedPriceMin.text = data.getString("usedPriceMin") ?: "UNK"
+                usedPriceMax.text = data.getString("usedPriceMax") ?: "UNK"
+                newPriceMin.text  = data.getString("newPriceMin") ?: "UNK"
+                newPriceMax.text  = data.getString("newPriceMax") ?: "UNK"
+
+                // Show AutomlAPI response
+                usedPriceMin.visibility = View.VISIBLE
+                usedPriceMax.visibility = View.VISIBLE
+                newPriceMin.visibility  = View.VISIBLE
+                newPriceMax.visibility  = View.VISIBLE
+            } catch (e: Exception) {
+                abort("Erreur réseau : ${e.message}")
+                return@execute
+            }
+        }
+    }
+
+    private fun abort(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+        window.decorView.postDelayed({ finish() }, 500)
     }
 
     // -------------------------------------------------------------------------

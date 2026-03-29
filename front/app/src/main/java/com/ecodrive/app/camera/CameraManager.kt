@@ -41,16 +41,28 @@ class CameraManager(
         lifecycleOwner: LifecycleOwner,
         onError: (Exception) -> Unit = { Log.e(TAG, "Erreur caméra", it) }
     ) {
-        val future = ProcessCameraProvider.getInstance(context)
-        future.addListener({
-            try {
-                cameraProvider = future.get()
-                bindUseCases(lifecycleOwner)
-                isStarted = true
-            } catch (e: Exception) {
-                onError(e)
+        if (isStarted) {
+            cameraProvider?: {
+                Log.e(TAG, "Camera is lost. try to restart.")
+                isStarted = false
+                baseStart(lifecycleOwner,onError)
             }
-        }, ContextCompat.getMainExecutor(context))
+        } else {
+            cameraProvider?.let {
+                Log.e(TAG, "Camera was mad closed. try to restart.")
+                stop()
+            }
+            val future = ProcessCameraProvider.getInstance(context)
+            future.addListener({
+                try {
+                    cameraProvider = future.get()
+                    bindUseCases(lifecycleOwner)
+                    isStarted = true
+                } catch (e: Exception) {
+                    onError(e)
+                }
+            }, ContextCompat.getMainExecutor(context))
+        }
     }
     fun safeStart(
         activity: Activity,
@@ -68,8 +80,20 @@ class CameraManager(
      * Arrête la caméra et libère les ressources.
      */
     fun stop() {
-        cameraProvider?.unbindAll()
-        isStarted = false
+        if (isStarted) {
+            try {
+                cameraProvider?.unbindAll()
+            } catch (e: Exception) {
+                Log.w(TAG, "Erreur stop caméra (ignorée)", e)
+            }
+            isStarted = false
+        } else {
+            if (cameraProvider == null) {
+                Log.e(TAG, "Camera was mad closed. Retry to closed.")
+                isStarted = true
+                stop()
+            }
+        }
     }
 
     fun onRequestPermissionsResult(

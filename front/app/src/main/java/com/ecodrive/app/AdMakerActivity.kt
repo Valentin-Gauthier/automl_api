@@ -13,6 +13,7 @@ import com.ecodrive.app.ui.mainframe.FooterTab
 import com.ecodrive.app.ui.mainframe.MainFrameManager
 import com.ecodrive.app.vehicle.VehicleInformation
 import com.ecodrive.app.vehicle.plate.data.PlateInformation
+import androidx.core.net.toUri
 
 class AdMakerActivity : AppCompatActivity() {
 
@@ -140,7 +141,7 @@ class AdMakerActivity : AppCompatActivity() {
         // Ouvre Le Bon Coin via le navigateur
         val url = "https://www.leboncoin.fr/deposer-une-annonce"
         try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
         } catch (e: Exception) {
             shareGeneric() // Fallback
         }

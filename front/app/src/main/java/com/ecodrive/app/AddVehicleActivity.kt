@@ -18,7 +18,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ecodrive.app.ui.mainframe.FooterTab
 import com.ecodrive.app.ui.mainframe.MainFrameManager
-import com.ecodrive.app.vehicle.Carrosserie
+import com.ecodrive.app.vehicle.CarBody
 import com.ecodrive.app.vehicle.GearboxEnergy
 import com.ecodrive.app.vehicle.GearboxType
 import com.ecodrive.app.vehicle.GenreVehicle
@@ -48,8 +48,7 @@ class AddVehicleActivity : AppCompatActivity() {
     private lateinit var vehicleBrand:   EditText
     private lateinit var vehicleModel:   EditText
     private lateinit var vehicleVersion: EditText
-    private lateinit var vehicleDateBtn: Button
-    private lateinit var vehicleDateDisplay: TextView
+    private lateinit var vehicleDate: EditText
     private lateinit var vehicleColor:   EditText
     private lateinit var vehicleVin:     EditText
     private lateinit var vehicleCountry: EditText
@@ -61,7 +60,7 @@ class AddVehicleActivity : AppCompatActivity() {
     private lateinit var vehiclePowerKw:      EditText
     private lateinit var vehiclePowerHp:      EditText
 
-    // Carrosserie
+    // CarBody
     private lateinit var vehicleBodyType:   Spinner
     private lateinit var vehicleGenreType:  Spinner
     private lateinit var vehicleDoors:      EditText
@@ -85,7 +84,6 @@ class AddVehicleActivity : AppCompatActivity() {
 
     private var baseVehicle: VehicleInformation = VehicleInformation.new()
     private var plate: PlateInformation? = null
-    private var selectedDateIso: String = ""
 
     /** Adapters pour les spinners */
     private lateinit var energyAdapter:  ArrayAdapter<String>
@@ -163,8 +161,7 @@ class AddVehicleActivity : AppCompatActivity() {
         vehicleBrand        = findViewById(R.id.vehicleBrand)
         vehicleModel        = findViewById(R.id.vehicleModel)
         vehicleVersion      = findViewById(R.id.vehicleVersion)
-        vehicleDateBtn      = findViewById(R.id.vehicleDateBtn)
-        vehicleDateDisplay  = findViewById(R.id.vehicleDateDisplay)
+        vehicleDate         = findViewById(R.id.vehicleDate)
         vehicleColor        = findViewById(R.id.vehicleColor)
         vehicleVin          = findViewById(R.id.vehicleVin)
         vehicleCountry      = findViewById(R.id.vehicleCountry)
@@ -207,7 +204,7 @@ class AddVehicleActivity : AppCompatActivity() {
     private fun setupSpinners() {
         energyAdapter  = buildSpinnerAdapter(GearboxEnergy.entries.toTypedArray())
         gearboxAdapter = buildSpinnerAdapter(GearboxType.entries.toTypedArray())
-        bodyAdapter    = buildSpinnerAdapter(Carrosserie.entries.toTypedArray())
+        bodyAdapter    = buildSpinnerAdapter(CarBody.entries.toTypedArray())
         genreAdapter   = buildSpinnerAdapter(GenreVehicle.entries.toTypedArray())
 
         vehicleEnergyType.adapter  = energyAdapter
@@ -237,17 +234,17 @@ class AddVehicleActivity : AppCompatActivity() {
     // -------------------------------------------------------------------------
 
     private fun setupDatePicker() {
-        vehicleDateBtn.setOnClickListener {
+        vehicleDate.setOnClickListener {
+            val selectedDate = vehicleDate.text
             val cal = Calendar.getInstance()
-            if (selectedDateIso.isNotBlank()) {
+            if (selectedDate.isNotBlank()) {
                 runCatching {
-                    val p = selectedDateIso.split("-")
+                    val p = selectedDate.split("-")
                     cal.set(p[0].toInt(), p[1].toInt() - 1, p[2].toInt())
                 }
             }
             DatePickerDialog(this, { _, year, month, day ->
-                selectedDateIso = "%04d-%02d-%02d".format(year, month + 1, day)
-                vehicleDateDisplay.text = "%02d/%02d/%04d".format(day, month + 1, year)
+                vehicleDate.text = getString(R.string.date_format).format(year, month + 1, day)
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
                 .also { it.datePicker.maxDate = System.currentTimeMillis() }
                 .show()
@@ -327,10 +324,9 @@ class AddVehicleActivity : AppCompatActivity() {
         if (info.fuelTankCapacityLiters > 0) vehicleFuelTank.setText(info.fuelTankCapacityLiters.toString())
 
         if (info.firstRegistrationDate.isNotBlank()) {
-            selectedDateIso = info.firstRegistrationDate
             val parts = info.firstRegistrationDate.split("-")
-            vehicleDateDisplay.text = if (parts.size == 3) "%s/%s/%s".format(parts[2], parts[1], parts[0])
-                                      else info.firstRegistrationDate
+            if (parts.size == 3)
+                vehicleDate.text = getString(R.string.date_format).format(parts[2], parts[1], parts[0])
         }
 
         selectSpinnerByLabel(vehicleEnergyType,  energyAdapter,  info.energy.label)
@@ -409,6 +405,7 @@ class AddVehicleActivity : AppCompatActivity() {
         val grossWeightKg = vehicleGrossWeightKg.text.toString().toIntOrNull() ?: 0
         val fuelTank     = vehicleFuelTank.text.toString().toIntOrNull() ?: 0
         val mileageKm    = mileageSlider.progress * MILEAGE_STEP_KM
+        val selectedDate = vehicleDate.text.toString()
 
         // Analyser les informations obtenues
         val brandChanged = brandName != baseVehicle.brandName
@@ -425,7 +422,7 @@ class AddVehicleActivity : AppCompatActivity() {
             modelStartDate = if (modelChanged) "" else baseVehicle.modelStartDate,
             modelEndDate   = if (modelChanged) "" else baseVehicle.modelEndDate,
             genreCode      = GenreVehicle.codeFromLabel(genreLabel),
-            bodyCode       = Carrosserie.codeFromLabel(bodyLabel),
+            bodyCode       = CarBody.codeFromLabel(bodyLabel),
             gearboxTypeCode   = GearboxType.codeFromLabel(gearboxLabel),
             gearboxPowerLevel = gearboxSpeed,
             energyCode     = GearboxEnergy.codeFromLabel(energyLabel),
@@ -440,7 +437,7 @@ class AddVehicleActivity : AppCompatActivity() {
             widthMm        = if (modelChanged) 0 else baseVehicle.widthMm,
             heightMm       = if (modelChanged) 0 else baseVehicle.heightMm,
             wheelbaseMm    = if (modelChanged) 0 else baseVehicle.wheelbaseMm,
-            firstRegistrationDate = selectedDateIso,
+            firstRegistrationDate = selectedDate,
             fuelTankCapacityLiters = if (fuelTank > 0) fuelTank else 0,
             collection     = if (modelChanged) "" else baseVehicle.collection,
             mileage        = mileageKm

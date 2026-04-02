@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class Brand(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "pp") val pp: String
+    @ColumnInfo(name = "logo_url") val logoUrl: String
 )

@@ -4,34 +4,43 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.ecodrive.app.database.converter.CarBodyConverter
+import com.ecodrive.app.database.converter.EnergyConverter
+import com.ecodrive.app.database.converter.GearboxConverter
+import com.ecodrive.app.database.converter.PlateTypeConverter
+import com.ecodrive.app.database.converter.RegistrationSystemConverter
+import com.ecodrive.app.database.converter.VehicleTypeConverter
 import com.ecodrive.app.database.dao.*
 import com.ecodrive.app.database.entities.*
 
 @Database(
     entities = [
-        Energy::class,
-        Gearbox::class,
-        GearboxEnergyCompatibility::class,
         Brand::class,
+        VehiclePrototype::class,
         Vehicle::class,
         VehicleAd::class,
         VehicleInList::class,
-        VehicleList::class,
-        VehiclePrototype::class
+        VehicleList::class
     ],
     version = 1,
     exportSchema = false
 )
+@TypeConverters(
+    CarBodyConverter::class,
+    EnergyConverter::class,
+    GearboxConverter::class,
+    VehicleTypeConverter::class,
+    PlateTypeConverter::class,
+    RegistrationSystemConverter::class
+)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun energy(): EnergyDao
-    abstract fun gearbox(): GearboxDao
-    abstract fun gearboxEnergyCompatibility(): GearboxEnergyCompatibilityDao
-    abstract fun marque(): BrandDao
-    abstract fun vehicleAd(): VehicleAdDao
+    abstract fun brand(): BrandDao
+    abstract fun vehiclePrototype(): VehiclePrototypeDao
     abstract fun vehicle(): VehicleDao
+    abstract fun vehicleAd(): VehicleAdDao
     abstract fun vehicleInList(): VehicleInListDao
     abstract fun vehicleList(): VehicleListDao
-    abstract fun vehiclePrototype(): VehiclePrototypeDao
 
     companion object {
         @Volatile

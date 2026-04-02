@@ -39,7 +39,7 @@
     <string name="vehicle_vin">N° de série (VIN)</string>
     <string name="vehicle_country">Pays (ex : FR)</string>
 
-    <!-- Add Vehicle – motorisation -->
+    <!-- Add Vehicle – motorization -->
     <string name="vehicle_motorization">Motorisation</string>
     <string name="vehicle_energy_type">Type d\'énergie</string>
     <string name="vehicle_gearbox_type">Type de boîte de vitesse</string>
@@ -81,7 +81,7 @@
     <string name="price_new_vehicle">Prix neuf :</string>
     <string name="price_range_start">de</string>
     <string name="price_range_middle">à</string>
-    <string name="price_range_end"></string>
+    <string name="price_range_end"/>
     <string name="price_currency_unit">€</string>
     <string name="price_example">XXX XXX</string>
     <string name="title_activity_predict">PredictActivity</string>
@@ -112,7 +112,7 @@
     <string name="settings_title">Paramètres</string>
     <string name="settings_gallery_section">Galerie</string>
     <string name="settings_gallery_size_label">Nombre de véhicules par ligne</string>
-    <string name="settings_gallery_size_value">%d par ligne</string>
+    <string name="settings_gallery_size_value">%d par lignes</string>
     <string name="settings_api_section">API de décodage SIV</string>
     <string name="settings_api_token_label">Token d\'accès à l\'API d\'immatriculation</string>
     <string name="settings_api_token_hint">Bearer token…</string>
@@ -137,4 +137,11 @@
     <string name="energyTypeElec">Électrique</string>
     <string name="gearboxTypesHand">Manuelle</string>
     <string name="gearboxTypesAuto">Automatique</string>
+
+    <!-- Others -->
+    <string name="settings_gallery_tabs_label">Catégories automatiques</string>
+    <string name="settings_apis_section">APIs</string>
+    <string name="header_btn_search_desc">Rechercher un véhicule</string>
+    <string name="header_btn_filter_desc">Filtrer la galerie</string>
+    <string name="date_format">%02d/%02d/%04d</string>
 </resources>

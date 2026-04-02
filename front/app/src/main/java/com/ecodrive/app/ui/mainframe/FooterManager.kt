@@ -8,13 +8,13 @@ import android.widget.Button
 import com.ecodrive.app.MainActivity
 import com.ecodrive.app.R
 import com.ecodrive.app.ScanActivity
+import com.ecodrive.app.SettingsActivity
 
 class FooterManager(
     private val activity: Activity,
     private val currentActivityId: FooterTab = FooterTab.NONE,
     private val onCurrentButtonClick: (view: View) -> Unit = {}
 ) {
-    private val TAG: String = "FooterManager"
 
     // -------------------------------------------------------------------------
     // Propriétés
@@ -32,7 +32,7 @@ class FooterManager(
     init {
         setupButton(btnHome, currentActivityId == FooterTab.HOME, MainActivity::class.java)
         setupButton(btnAddVehicle, currentActivityId == FooterTab.ADD, ScanActivity::class.java)
-//NOT_DEFINED:        setupButton(btnConfig, currentActivityId == FooterTab.CONFIG, ConfigActivity::class.java)
+        setupButton(btnConfig, currentActivityId == FooterTab.CONFIG, SettingsActivity::class.java)
     }
 
     private fun setupButton(
@@ -51,5 +51,9 @@ class FooterManager(
             }
             button.isEnabled = true
         }
+    }
+
+    companion object {
+        private const val TAG: String = "FooterManager"
     }
 }

@@ -3,17 +3,26 @@ package com.ecodrive.app.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.ecodrive.app.database.entities.VehicleAd
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface VehicleAdDao {
+
+    // -------------------------------------------------------------------------
+    // Écriture
+    // -------------------------------------------------------------------------
+
     @Insert
     suspend fun insert(vehicleAd: VehicleAd): Long
 
-    @Query("DELETE FROM Vehicles_ads WHERE id = :id")
-    suspend fun deleteById(id: String)
+    @Update
+    suspend fun update(vehicleAd: VehicleAd)
 
-    @Query("SELECT * FROM Vehicles_ads WHERE immatriculation=:vehicle")
-    fun getAllAdsFrom(vehicle: String): Flow<List<VehicleAd>>
+    @Query("DELETE FROM Vehicles_ads WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
+    @Query("SELECT * FROM Vehicles_ads WHERE idVehicle = :vehicleId")
+    fun getAllAdsFrom(vehicleId: String): Flow<List<VehicleAd>>
 }

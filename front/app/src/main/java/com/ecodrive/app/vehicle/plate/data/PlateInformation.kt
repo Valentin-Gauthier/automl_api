@@ -36,9 +36,9 @@ data class PlateInformation(
     // -------------------------------------------------------------------------
 
     private constructor(parcel: Parcel) : this(
-        type = PlateType.valueOf(parcel.readString() ?: PlateType.UNKNOWN.name),
-        format = PlateFormat.valueOf(parcel.readString() ?: PlateFormat.UNKNOWN.name),
-        registrationSystem = RegistrationSystem.valueOf(parcel.readString() ?: RegistrationSystem.UNKNOWN.name),
+        type = PlateType.valueOf(parcel.readString() ?: PlateType.UNKNOW.name),
+        format = PlateFormat.valueOf(parcel.readString() ?: PlateFormat.UNKNOW.name),
+        registrationSystem = RegistrationSystem.valueOf(parcel.readString() ?: RegistrationSystem.UNKNOW.name),
         number = parcel.readString() ?: "",
         countryCode = parcel.readString(),
         departmentCode = parcel.readString(),
@@ -103,9 +103,9 @@ data class PlateInformation(
         }
 
         fun new() = PlateInformation(
-            PlateType.UNKNOWN,
-            PlateFormat.UNKNOWN,
-            RegistrationSystem.UNKNOWN,
+            PlateType.UNKNOW,
+            PlateFormat.UNKNOW,
+            RegistrationSystem.UNKNOW,
             "",
             null,
             null,

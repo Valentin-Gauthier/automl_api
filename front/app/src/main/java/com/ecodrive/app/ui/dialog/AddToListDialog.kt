@@ -1,21 +1,20 @@
 package com.ecodrive.app.ui.dialog
 
+import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
+import android.view.Window
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.ecodrive.app.R
 import com.ecodrive.app.database.AppDatabase
 import com.ecodrive.app.database.entities.Vehicle
-import com.ecodrive.app.database.entities.VehicleInList
 import com.ecodrive.app.database.entities.VehicleList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -24,109 +23,156 @@ import kotlinx.coroutines.withContext
  * et d'y ajouter un véhicule, ou de créer une nouvelle liste.
  */
 class AddToListDialog(
-    private val context: Context,
+    context: Context,
     private val vehicle: Vehicle,
-    private val onDone: () -> Unit = {}
-) {
+    private val onDone: () -> Unit = {},
+    private val onAbort: () -> Unit = {}
+) : Dialog(context) {
+
+    // -------------------------------------------------------------------------
+    // Propriétés
+    // -------------------------------------------------------------------------
+
+    // Composant tiré du layout installé.
+    private lateinit var categoriesContainer: LinearLayout
+    private lateinit var newCategory: EditText
+    private lateinit var newCategoryButton: Button
+    private lateinit var confirmButton: Button
+    private lateinit var cancelButton: Button
+
+    // Suivi des catégories
     private val db = AppDatabase.getDatabase(context)
+    private val checkedCategories = mutableMapOf<Int, Boolean>()
+    private var inRun = false
 
-    fun show() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val lists = db.vehicleList().getAll().first()
-            withContext(Dispatchers.Main) {
-                buildAndShow(lists)
-            }
-        }
+    // -------------------------------------------------------------------------
+    // Create
+    // -------------------------------------------------------------------------
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        setContentView(R.layout.dialog_categorize)
+
+        // Initialiser les vues
+        categoriesContainer=findViewById(R.id.categories)
+        newCategory       = findViewById(R.id.category)
+        newCategoryButton = findViewById(R.id.categoryBtn)
+        confirmButton     = findViewById(R.id.ok_button)
+        cancelButton      = findViewById(R.id.cancel_button)
+
+        // Configurer les boutons
+        newCategoryButton.setOnClickListener { addNewCategory() }
+        confirmButton.setOnClickListener { saveChanges() }
+        cancelButton.setOnClickListener { dismiss() }
+
+        // Charger les catégories
+        loadCategories()
+        inRun = true
     }
 
-    private fun buildAndShow(lists: List<VehicleList>) {
-        val checkedStates = BooleanArray(lists.size) { false }
-        val dp8 = (8 * context.resources.displayMetrics.density).toInt()
-        val dp16 = dp8 * 2
+    // -------------------------------------------------------------------------
+    // Chargement initial
+    // -------------------------------------------------------------------------
 
-        // Conteneur principal
-        val root = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp16, dp16, dp16, dp8)
-        }
-
-        // Listes existantes avec cases à cocher
-        if (lists.isNotEmpty()) {
-            root.addView(TextView(context).apply {
-                text = context.getString(R.string.dialog_select_lists)
-                textSize = 14f
-                setPadding(0, 0, 0, dp8)
-            })
-
-            val scrollView = ScrollView(context)
-            val checkContainer = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
-            lists.forEachIndexed { i, list ->
-                val cb = CheckBox(context).apply {
-                    text = list.name
-                    setPadding(0, dp8, 0, dp8)
-                    setOnCheckedChangeListener { _, checked -> checkedStates[i] = checked }
-                }
-                checkContainer.addView(cb)
-            }
-            scrollView.addView(checkContainer)
-            root.addView(scrollView)
-        } else {
-            root.addView(TextView(context).apply {
-                text = context.getString(R.string.dialog_no_list_yet)
-                textSize = 14f
-                setPadding(0, 0, 0, dp8)
-            })
-        }
-
-        // Nouvelle liste
-        root.addView(TextView(context).apply {
-            text = context.getString(R.string.dialog_create_new_list)
-            textSize = 14f
-            setPadding(0, dp16, 0, dp8)
-        })
-        val newListInput = EditText(context).apply {
-            hint = context.getString(R.string.dialog_new_list_name_hint)
-        }
-        root.addView(newListInput)
-
-        AlertDialog.Builder(context)
-            .setTitle(context.getString(R.string.dialog_add_to_list_title))
-            .setView(root)
-            .setPositiveButton(context.getString(R.string.dialog_confirm)) { _, _ ->
-                onConfirm(lists, checkedStates, newListInput.text.toString().trim())
-            }
-            .setNegativeButton(context.getString(R.string.dialog_cancel), null)
-            .show()
-    }
-
-    private fun onConfirm(lists: List<VehicleList>, checked: BooleanArray, newListName: String) {
+    private fun loadCategories() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                if (newListName.isNotBlank()) {
-                    val newId = db.vehicleList().insert(VehicleList(name = newListName))
-                    db.vehicleInList().insert(VehicleInList(vehicle.immatriculation, newId.toInt()))
-                }
-                lists.forEachIndexed { i, list ->
-                    if (checked[i]) {
-                        try {
-                            db.vehicleInList().insert(
-                                VehicleInList(
-                                    vehicle.immatriculation,
-                                    list.id
-                                )
-                            )
-                        } catch (_: Exception) { /* Déjà présent dans cette liste */ }
-                    }
-                }
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(context, context.getString(R.string.dialog_vehicle_added), Toast.LENGTH_SHORT).show()
-                    onDone()
+                // Charger les catégories déjà sélectionnées
+                db.vehicleInList()
+                    .getListIdsForVehicle(vehicle)
+                    .forEach { checkedCategories[it] = true }
+
+                // Observer les changements dans les catégories
+                db.vehicleList().getAll().collect { categories ->
+                    withContext(Dispatchers.Main) { refresh(categories) }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "Erreur : ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Rafraîchissement de l'UI
+    // -------------------------------------------------------------------------
+
+    private fun refresh(categories: List<VehicleList>) {
+        categoriesContainer.removeAllViews()
+        categories.forEach { category ->
+            // Initialise l'état pour les nouvelles listes ajoutées dynamiquement
+            if (category.id !in checkedCategories)
+                checkedCategories[category.id] = inRun
+            // Ajout de la case à cocher reflétant l'état de la liste
+            val checkBox = CheckBox(context).apply {
+                text = category.name
+                isChecked = checkedCategories[category.id] ?: inRun
+                setOnCheckedChangeListener { _, checked ->
+                    checkedCategories[category.id] = checked
+                }
+            }
+            categoriesContainer.addView(checkBox)
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Actions
+    // -------------------------------------------------------------------------
+
+    private fun addNewCategory() {
+        val name = newCategory.text.toString().trim().also { newCategory.text.clear() }
+        if (name.isEmpty()) return
+        CoroutineScope(Dispatchers.IO).launch {
+            val newId = db.vehicleList()
+                .insert(VehicleList(name = name))
+                .toInt()
+            checkedCategories[newId] = true
+            // Le Flow de getAll() déclenchera automatiquement refresh()
+        }
+    }
+
+    private fun saveChanges() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val alreadySelected = try {
+                // Charger les catégories déjà sélectionnées
+                 db.vehicleInList().getListIdsForVehicle(vehicle)
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                }
+                return@launch
+            }
+
+            val toAdd: List<Int> = checkedCategories
+                .filter { (id, state) -> state && id !in alreadySelected }
+                .keys
+                .toList()
+
+            val toRem: List<Int> = checkedCategories
+                .filter { (id, state) -> !state && id in alreadySelected }
+                .keys
+                .toList()
+
+            // Modification de la base de données
+            db.vehicleInList().deleteAll(vehicle.id, toRem)
+            db.vehicleInList().insertAll(vehicle.id, toAdd)
+
+            withContext(Dispatchers.Main) {
+                onDone.invoke()
+                super.dismiss()
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Death
+    // -------------------------------------------------------------------------
+
+    override fun dismiss() {
+        // Abandonner la modification des catégories du véhicule
+        onAbort.invoke()
+        super.dismiss()
     }
 }

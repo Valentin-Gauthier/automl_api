@@ -45,12 +45,12 @@ class HeaderManager(private val activity: Activity) {
         return this
     }
 
-    fun unactiveName(visible: Boolean): HeaderManager {
+    fun unactiveName(): HeaderManager {
         appName.visibility = View.GONE
         return this
     }
 
-    fun unactiveLogo(visible: Boolean): HeaderManager {
+    fun unactiveLogo(): HeaderManager {
         appIcon.visibility = View.GONE
         return this
     }

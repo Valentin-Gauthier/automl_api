@@ -112,7 +112,7 @@ class PlateAPI(
             data.int("energie")        ?: 0,
             data.int("puisFiscReelKW") ?: 0,
             data.int("puisFiscReelCH") ?: 0,
-            // APPAREANCE
+            // APPEARANCE
             data.int("nr_passagers") ?: 0,
             data.int("nb_portes")    ?: 0,
             data.str("couleur")      ?: "",

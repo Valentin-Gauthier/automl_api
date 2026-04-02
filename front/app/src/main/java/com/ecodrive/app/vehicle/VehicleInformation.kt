@@ -153,7 +153,7 @@ data class VehicleInformation(
     // =========================
 
     val genre: GenreVehicle      get() = GenreVehicle.from(genreCode)
-    val body: Carrosserie        get() = Carrosserie.from(bodyCode)
+    val body: CarBody        get() = CarBody.from(bodyCode)
     val gearboxType: GearboxType get() = GearboxType.from(gearboxTypeCode)
     val energy: GearboxEnergy    get() = GearboxEnergy.from(energyCode)
 

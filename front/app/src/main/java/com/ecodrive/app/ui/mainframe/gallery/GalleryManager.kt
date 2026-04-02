@@ -1,6 +1,7 @@
 package com.ecodrive.app.ui.mainframe.gallery
 
 import android.app.Activity
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,8 +13,20 @@ import android.widget.TableRow
 import android.widget.TextView
 import com.ecodrive.app.R
 import com.ecodrive.app.ScanActivity
+import com.ecodrive.app.SettingsActivity
+import com.ecodrive.app.database.AppDatabase
+import com.ecodrive.app.database.dto.VehicleGalleryItem
+import com.ecodrive.app.ui.dialog.AddToListDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
-class GalleryManager(private val activity: Activity) {
+class GalleryManager(
+    private val activity: Activity,
+    private val scope: CoroutineScope,
+    private val db: AppDatabase
+) {
 
     // -------------------------------------------------------------------------
     // Propriétés
@@ -22,27 +35,20 @@ class GalleryManager(private val activity: Activity) {
     // Composant tiré du layout installé.
     private val galleryContainer: ScrollView = activity.findViewById(R.id.contentContainer)
 
-    // Composant construit pour l'activité.
-    private val voidGallery: View
-    private val galleryName: TextView
-    private val addVehicleButton: Button
+    private val voidGallery: View = LayoutInflater.from(activity)
+        .inflate(R.layout.gallery_void, galleryContainer, false)
+    private val addVehicleButton: Button = voidGallery.findViewById(R.id.btnAddFirstVehicle)
+    private val galleryName: TextView = voidGallery.findViewById(R.id.galleryNameIfVoid)
+    private val defaultName: String = galleryName.text.toString()
 
-    // Suivi du status
-    private val defaultName: String
+    // Statut
+    private var currentJob: Job? = null
 
     // -------------------------------------------------------------------------
     // Initialisation
     // -------------------------------------------------------------------------
 
     init {
-        // Inflater le layout void_gallery
-        val inflater = LayoutInflater.from(activity)
-        voidGallery = inflater.inflate(R.layout.gallery_void, galleryContainer, false)
-        galleryName = voidGallery.findViewById(R.id.galleryNameIfVoid)
-        addVehicleButton = voidGallery.findViewById(R.id.btnAddFirstVehicle)
-
-        defaultName = galleryName.text.toString()
-
         addVehicleButton.setOnClickListener {
             val intent = Intent(activity, ScanActivity::class.java)
             activity.startActivity(intent)
@@ -50,50 +56,88 @@ class GalleryManager(private val activity: Activity) {
     }
 
     // -------------------------------------------------------------------------
-    // Accesseurs
+    // API publique
     // -------------------------------------------------------------------------
 
-    fun changeName(name: String? = null) {
-        if (name != null) {
-            galleryName.text = name
-        } else {
-            galleryName.text = defaultName
+    fun showEmptyState(categoryName: String? = null) {
+        galleryContainer.removeAllViews()
+        galleryName.text = categoryName ?: defaultName
+        galleryContainer.addView(voidGallery)
+    }
+
+    fun loadAllVehicles(categoryName: String) =
+        load(db.vehicle().getAllGalleryItems(), categoryName)
+    fun loadAllVehiclesWithinCategory(categoryName: String) =
+        load(db.vehicle().getGalleryItemsWithoutList(), categoryName)
+    fun loadVehiclesForCategory(categoryId: Int, categoryName: String) =
+        load(db.vehicle().getGalleryItemsForList(listId), categoryName)
+
+    // -------------------------------------------------------------------------
+    // Logique interne
+    // -------------------------------------------------------------------------
+
+    private fun loadVehicles(flow: Flow<List<VehicleGalleryItem>>, categoryName: String) {
+        // Annule la surveillance de la dernière catégorie sélectionnée.
+        currentJob?.cancel()
+
+        // Commence la surveillance de la nouvelle catégorie.
+        currentJob = scope.launch {
+            flow.collect { vehicles ->
+                if (vehicles.isEmpty()) {
+                    Log.d(TAG, "The '$categoryName' is void.")
+                    showEmptyState(categoryName)
+                } else {
+                    displayVehicles(categoryName, vehicles)
+                }
+            }
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Cycle de vie
-    // -------------------------------------------------------------------------
+    private fun displayVehicles(categoryName: String, vehicles: List<VehicleGalleryItem>) {
+        Log.d(TAG, "Load content of the '$categoryName' category.")
+        val gallerySize = activity
+            .getSharedPreferences(SettingsActivity.PREFS_NAME, MODE_PRIVATE)
+            .getInt(SettingsActivity.KEY_GALLERY_SIZE, SettingsActivity.DEFAULT_GALLERY_SIZE)
 
-    fun refresh(vehicles: List<String>, nbVehiclePerLine: Int) {
-        galleryContainer.removeAllViews()
-        val child = if (vehicles.isEmpty()) {
-            Log.d(TAG, "The '" + galleryName.text + "' is void.")
-            voidGallery
-        } else {
-            Log.d(TAG, "Load content of the '" + galleryName.text + "' category.")
-            val gallery = TableLayout(activity)
-            var nbVehicleOnLine = 0
-            var row = TableRow(activity)
-            for (vehicle in vehicles) {
-                if (nbVehicleOnLine >= nbVehiclePerLine) {
-                    nbVehicleOnLine = 0
-                    gallery.addView(row)
-                    row = TableRow(activity)
-                }
-                val vehicleItem = Button(activity)
-                vehicleItem.text = vehicle
-                row.addView(vehicleItem)
-                nbVehicleOnLine++
-            }
-            if (nbVehicleOnLine > 0)
+        val gallery = TableLayout(activity)
+        var row = TableRow(activity)
+        var rowSize = 0
+
+        vehicles.forEach { vehicle ->
+            if (rowSize >= gallerySize) {
                 gallery.addView(row)
-            gallery
+                row = TableRow(activity)
+                rowSize = 0
+            }
+            val vehicleItem = Button(activity).apply {
+                text = vehicle.immatriculation
+                setOnClickListener { onVehicleClick(vehicle) }
+                setOnLongClickListener { onVehicleLongClick(vehicle); true }
+            }
+            row.addView(vehicleItem)
+            rowSize++
         }
-        galleryContainer.addView(child)
+
+        if (rowSize > 0) gallery.addView(row)
+
+        galleryContainer.removeAllViews()
+        galleryContainer.addView(gallery)
+    }
+
+    private fun onVehicleClick(vehicle: VehicleGalleryItem) {
+        // TODO: Afficher les détails du véhicule
+    }
+
+    private fun onVehicleLongClick(vehicle: Vehicle) {
+        scope.launch {
+            val vehicle = db.vehicle().getWithDetails(item.id)?.vehicle ?: return@launch
+            activity.runOnUiThread {
+                AddToListDialog(activity, vehicle).show()
+            }
+        }
     }
 
     companion object {
-        private const val TAG: String = "GalleryManager"
+        private const val TAG = "GalleryManager"
     }
 }

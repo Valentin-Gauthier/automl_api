@@ -1,11 +1,11 @@
 package com.ecodrive.app.vehicle
 
-enum class Carrosserie(
+enum class CarBody(
     override val code: Int?,
     override val label: String,
     override val description: String
 ) : SpinnerItem<Int> {
-    UNKNOW(null, "Inconnue", "Carrosserie non reconnue"),
+    UNKNOW(null, "Inconnue", "CarBody non reconnue"),
 
     FOURGON_BREAK(21, "Fourgon/Break", "Véhicule utilitaire ou break"),
     BERLINE_BICORPS(25, "Berline bicorps", "3 ou 5 portes"),
@@ -17,7 +17,7 @@ enum class Carrosserie(
     PICKUP(32, "Pick-up", "Véhicule avec benne"),
     BUS(33, "Autobus", "Transport collectif"),
     FOURGON(34, "Fourgon", "Véhicule utilitaire fermé"),
-    TT_OUVERT(38, "Tout-terrain ouvert", "Carrosserie ouverte"),
+    TT_OUVERT(38, "Tout-terrain ouvert", "CarBody ouverte"),
     TT_FERME(39, "Tout-terrain fermé", "SUV/4x4 fermé"),
     MONOSPACE(40, "Monospace", "Grand véhicule familial"),
     PLATEFORME(42, "Plate-forme", "Camion châssis"),
@@ -31,7 +31,7 @@ enum class Carrosserie(
     MIXTE_4(56, "Mixte monospace", "Camionnette / monospace");
 
     companion object {
-        fun from(code: Int?): Carrosserie {
+        fun from(code: Int?): CarBody {
             return entries.find { it.code == code } ?: UNKNOW
         }
         fun codeFromLabel(label: String): Int? {

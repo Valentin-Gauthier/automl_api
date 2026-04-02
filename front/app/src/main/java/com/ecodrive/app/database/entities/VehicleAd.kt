@@ -8,17 +8,20 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "Vehicles_ads",
-    indices = [Index("immatriculation")],
+    indices = [Index("idVehicle")],
     foreignKeys = [
         ForeignKey(
             entity = Vehicle::class,
-            parentColumns = ["immatriculation"],
-            childColumns = ["immatriculation"]
+            parentColumns = ["id"],
+            childColumns = ["idVehicle"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
 data class VehicleAd(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "immatriculation") val immatriculation: String,
-    @ColumnInfo(name = "archive") val pp: String
+    @ColumnInfo(name = "idVehicle") val idVehicle: String,
+
+    /** Chemin local ou URL de l'annonce (archive compressée et/ou posts). */
+    @ColumnInfo(name = "archive_path") val archivePath: String = ""
 )

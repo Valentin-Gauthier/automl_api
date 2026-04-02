@@ -141,13 +141,11 @@ class PlateAnalyzer {
     private fun findValiditySection(blocks: List<TextBlock>, main: TextBlock): TextBlock? {
         val mainBox = main.boundingBox
         return blocks
-            .filter { it != main }
-            .filter { block ->
-                isRed(block.backgroundColor) &&
-                    VALIDITY_REGEX.containsMatchIn(block.text) &&
-                    verticalOverlap(block.boundingBox, mainBox) > 0.2f
+            .firstOrNull { it != main
+                    && isRed(it.backgroundColor)
+                    && VALIDITY_REGEX.containsMatchIn(it.text)
+                    && verticalOverlap(it.boundingBox, mainBox) > 0.2f
             }
-            .firstOrNull()
     }
 
     // =========================================================================
@@ -230,7 +228,7 @@ class PlateAnalyzer {
             // SIV sans région (cas limite, probablement normal)
             euIsBlue && !hasRegion && isWhite(bgColor)
                 -> PlateType.NORMAL
-            else -> PlateType.UNKNOWN
+            else -> PlateType.UNKNOW
         }
     }
 
@@ -239,14 +237,14 @@ class PlateAnalyzer {
     // =========================================================================
 
     private fun detectFormat(plateRect: Rect): PlateFormat {
-        if (plateRect.isEmpty) return PlateFormat.UNKNOWN
+        if (plateRect.isEmpty) return PlateFormat.UNKNOW
         val ratio = plateRect.width().toFloat() / plateRect.height()
         // Moto : plaque quasi carrée ou portrait (ratio < 2.0)
         // Voiture : très allongée (ratio > 3.0)
         return when {
             ratio < MOTO_RATIO_THRESHOLD -> PlateFormat.MOTORCYCLE
             ratio > CAR_RATIO_THRESHOLD  -> PlateFormat.STANDARD
-            else                         -> PlateFormat.UNKNOWN
+            else                         -> PlateFormat.UNKNOW
         }
     }
 
@@ -268,10 +266,10 @@ class PlateAnalyzer {
         score+= 0.15f * (if (region != null) 1 else -1)
 
         // Type résolu (pas UNKNOWN)
-        score+= 0.10f * (if (type   != PlateType.UNKNOWN) 1 else -1)
+        score+= 0.10f * (if (type   != PlateType.UNKNOW) 1 else -1)
 
         // Format résolu (pas UNKNOWN)
-        score+= 0.05f * (if (format != PlateFormat.UNKNOWN) 1 else -1)
+        score+= 0.05f * (if (format != PlateFormat.UNKNOW) 1 else -1)
 
         // Calcul de la probabilité d'avoir trouvé un numéro d'immatriculation
         score = main.confidence * (0.5f + score)

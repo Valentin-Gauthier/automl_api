@@ -62,30 +62,17 @@
                 android:minHeight="48dp" />
 
             <!-- Date : bouton système -->
-            <LinearLayout
+            <EditText
+                android:id="@+id/vehicleDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="8dp"
-                android:gravity="center_vertical">
-
-                <Button
-                    android:id="@+id/vehicleDateBtn"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/vehicle_date_picker_btn"
-                    android:textAllCaps="false"/>
-
-                <TextView
-                    android:id="@+id/vehicleDateDisplay"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:hint="@string/vehicle_date_placeholder"
-                    android:textSize="15sp"/>
-            </LinearLayout>
+                android:autofillHints="date"
+                android:hint="@string/vehicle_date_picker_btn"
+                android:importantForAutofill="yes"
+                android:inputType="date"
+                android:minHeight="48dp"
+                android:textSize="15sp"/>
 
             <EditText
                 android:id="@+id/vehicleColor"
@@ -285,7 +272,7 @@
                     android:autofillHints="weightKg"
                     android:hint="@string/vehicle_weight_kg"
                     android:importantForAutofill="yes"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:minHeight="48dp" />
 
                 <EditText
@@ -295,7 +282,7 @@
                     android:autofillHints="grossWeightKg"
                     android:hint="@string/vehicle_gross_weight_kg"
                     android:importantForAutofill="yes"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:minHeight="48dp" />
             </LinearLayout>
 

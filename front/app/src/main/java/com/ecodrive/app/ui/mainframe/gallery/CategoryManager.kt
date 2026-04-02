@@ -1,82 +1,120 @@
 package com.ecodrive.app.ui.mainframe.gallery
 
 import android.app.Activity
+import android.content.Context.MODE_PRIVATE
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.ecodrive.app.R
+import com.ecodrive.app.SettingsActivity
+import com.ecodrive.app.database.AppDatabase
+import com.ecodrive.app.database.entities.VehicleList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-
-class CategoryManager(private val activity: Activity) {
-    private val TAG: String = "CategoryManager"
+class CategoryManager(
+    private val activity: Activity,
+    scope: CoroutineScope,
+    private val db: AppDatabase
+) {
 
     // -------------------------------------------------------------------------
     // Propriétés
     // -------------------------------------------------------------------------
 
-    // Composant tiré du layout installé.
+    private val galleryManager = GalleryManager(activity, scope, db)
     private val tabContent: LinearLayout = activity.findViewById(R.id.tabContent)
-
-    // Manager de sous-composants.
-    private val galleryManager: GalleryManager = GalleryManager(activity)
-
-    // Suivi du status
-    private var oldSelectedTabId: Int? = -1
+    private var selectedCategoryId: Int? = null
 
     // -------------------------------------------------------------------------
-    // Accesseurs
+    // Initialisation
     // -------------------------------------------------------------------------
 
-    fun getGallery(): GalleryManager {
-        return galleryManager
+    suspend fun observeCategories() {
+        db.vehicleList().getAll().collect { categories ->
+            withContext(Dispatchers.Main) {
+                updateCategoryTabs(normalizedCategorised(categories))
+            }
+        }
     }
 
     // -------------------------------------------------------------------------
-    // Cycle de vie
+    // Logique interne
     // -------------------------------------------------------------------------
 
-    fun refresh(categories: List<Pair<String, List<String>>>, selectedCategory: Int = 0, nbVehiclePerLine: Int) {
+    private fun normalizedCategorised(categories: List<VehicleList>): List<VehicleList> {
+        // Obtenir la configuration
+        val prefs = activity.getSharedPreferences(SettingsActivity.PREFS_NAME, MODE_PRIVATE)
+        val tabForVehicleWithinCategory = prefs
+            .getBoolean(SettingsActivity.KEY_SHOW_NOT_CATEGORIZED, SettingsActivity.DEFAULT_SHOW_NOT_CATEGORIZED)
+        val tabForAllVehicle = prefs
+            .getBoolean(SettingsActivity.KEY_SHOW_ALL, SettingsActivity.DEFAULT_SHOW_ALL)
+
+        // Ajouter les onglets automatiques demandés
+        if (tabForVehicleWithinCategory || tabForAllVehicle) {
+            val mutableCategories = categories.toMutableList()
+            if (tabForVehicleWithinCategory) {
+                val name = prefs
+                    .getString(SettingsActivity.KEY_SHOW_NOT_CATEGORIZED_NAME, SettingsActivity.DEFAULT_SHOW_NOT_CATEGORIZED_NAME)
+                    ?.trim()
+                    ?: SettingsActivity.DEFAULT_SHOW_NOT_CATEGORIZED_NAME
+                mutableCategories.add(0, VehicleList(-1, name))
+            }
+            if (tabForAllVehicle) {
+                val name = prefs
+                    .getString(SettingsActivity.KEY_SHOW_ALL_NAME, SettingsActivity.DEFAULT_SHOW_ALL_NAME)
+                    ?.trim()
+                    ?: SettingsActivity.DEFAULT_SHOW_ALL_NAME
+                mutableCategories.add(0, VehicleList(-2, name))
+            }
+            return mutableCategories
+        }
+        return categories
+    }
+
+    private fun updateCategoryTabs(categories: List<VehicleList>) {
+        // Afficher le contenu de la liste
+        tabContent.visibility = if (categories.size > 1) View.VISIBLE else View.GONE
         tabContent.removeAllViews()
-        val nbCategories = categories.size
-        if (nbCategories < 1) {
+        if (categories.isEmpty()) {
             Log.d(TAG, "User don't have category registered.")
-            tabContent.visibility = View.GONE
-            galleryManager.changeName()
-            galleryManager.refresh(emptyList(), nbVehiclePerLine)
+            selectedCategoryId = null
+            galleryManager.showEmptyState()
         } else {
-            var printNameDeb: String
-            var printNameEnd: String
-            var iCategory: Int
-
-            if (nbCategories == 1) {
-                tabContent.visibility = View.GONE
-
-                iCategory = 0
-                printNameDeb = "only category("
-                printNameEnd = ") of the user "
-            } else {
-                for (category in categories) {
-                    val categoryView = TextView(activity)
-                    categoryView.text = category.first
-                    tabContent.addView(categoryView)
+            categories.forEach { category ->
+                val tab = TextView(activity).apply {
+                    text = category.name
+                    setOnClickListener { onCategorySelected(category) }
                 }
-                tabContent.visibility = View.VISIBLE
-
-                iCategory = if (selectedCategory <= 0)
-                    0
-                else if (selectedCategory > categories.size)
-                    categories.size - 1
-                else
-                    selectedCategory
-                printNameDeb = "'"
-                printNameEnd = "' category"
+                tabContent.addView(tab)
             }
 
-            val (name, content) = categories[iCategory]
-            Log.d(TAG, "The $printNameDeb$name$printNameEnd is in loading state.")
-            galleryManager.changeName(name)
-            galleryManager.refresh(content, nbVehiclePerLine)
+            // Sélectionner la première catégorie par défaut
+            if (selectedCategoryId == null) {
+                onCategorySelected(categories.first())
+            }
         }
+    }
+
+    private fun onCategorySelected(category: VehicleList) {
+        //TODO: Changer l'apparance de l'onglet actuellement sélectionné et du nouveau
+
+        // Actualiser le contenu de la gallery
+        val categoryId = category.id
+        val categoryName = category.name
+        when (categoryId) {
+            -2 -> galleryManager.loadAllVehicles(categoryName)
+            -1 -> galleryManager.loadAllVehiclesWithinCategory(categoryName)
+            else -> galleryManager.loadVehiclesForCategory(categoryId, categoryName)
+        }
+
+        // Changer le pointeur sur la catégorie sélectionné
+        selectedCategoryId = categoryId
+    }
+
+    companion object {
+        private const val TAG = "CategoryManager"
     }
 }

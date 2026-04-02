@@ -7,13 +7,13 @@ import androidx.room.Index
 
 @Entity(
     tableName = "Vehicles_in_Lists",
-    primaryKeys = ["immatriculation", "ListId"],
+    primaryKeys = ["VehicleId", "ListId"],
     indices = [Index("ListId")],
     foreignKeys = [
         ForeignKey(
             entity = Vehicle::class,
-            parentColumns = ["immatriculation"],
-            childColumns = ["immatriculation"]
+            parentColumns = ["id"],
+            childColumns = ["VehicleId"]
         ),
         ForeignKey(
             entity = VehicleList::class,
@@ -23,6 +23,6 @@ import androidx.room.Index
     ]
 )
 data class VehicleInList(
-    @ColumnInfo(name = "immatriculation") val immatriculation: String,
+    @ColumnInfo(name = "VehicleId") val vehicleId: String,
     @ColumnInfo(name = "ListId") val listId: Int
 )

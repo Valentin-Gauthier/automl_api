@@ -29,3 +29,5 @@ local.properties
 
 /front/.idea/shelf/
 /front/.idea/workspace.xml
+
+Diagrammes/out/*.pdf

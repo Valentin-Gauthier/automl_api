@@ -2,6 +2,38 @@
 title Package : com.ecodrive.app.vehicle.plate.* (Analyse des plaques d'immatriculation)
 
 package ".data" {
+	package ".section" {
+		class EuSection {
+			+block : TextBlock
+			+isBlue : Boolean
+			+countryCode : String
+		}
+
+		class MainSection {
+			+block : TextBlock
+			+rawNumber : String
+			+normalizedNumber : String
+			+system : RegistrationSystem
+		}
+
+		class RegionalSection {
+			+block : TextBlock
+			+departmentCode : String
+			+isBlue : Boolean
+		}
+
+		class ValiditySection {
+			+block : TextBlock
+			+month : Int
+			+year : Int
+		}
+
+		EuSection       --> TextBlock : block
+		MainSection     --> TextBlock : block
+		RegionalSection --> TextBlock : block
+		ValiditySection --> TextBlock : block
+	}
+
 	enum PlateType {
 		UNKNOWN
 		NORMAL

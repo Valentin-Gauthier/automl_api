@@ -56,7 +56,7 @@ svg2pdf(){
 # --- PREP ---
 mkdir -p "$OUT_DIR"
 opts=( -tsvg -o "$OUT_DIR" -nbthread "$THREADS" $PLANTUML_OPTS "**/*.puml" )
-svg2pdfOpts=( "$OUT_DIR" -type f -name "*.svg" -print0)
+svg2pdfOpts=( "$OUT_DIR" -type f -name "*.svg" -print)
 
 # --- EXEC ---
 

@@ -1,0 +1,18 @@
+@startuml
+title Package : com.ecodrive.app.database.*
+
+abstract class AppDatabase {
+	+energy() : EnergyDao
+	+gearbox() : GearboxDao
+	+gearboxEnergyCompatibility() : GearboxEnergyCompatibilityDao
+	+marque() : BrandDao
+	+vehicleAd() : VehicleAdDao
+	+vehicle() : VehicleDao
+	+vehicleInList() : VehicleInListDao
+	+vehicleList() : VehicleListDao
+	+vehiclePrototype() : VehiclePrototypeDao
+	+{static} getDatabase(context: Context) : AppDatabase
+	-{static} INSTANCE : AppDatabase?
+}
+
+@enduml

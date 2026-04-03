@@ -1,0 +1,130 @@
+@startuml vehicle
+title Package : com.ecodrive.app.*
+
+package "vehicle" {
+
+	interface "SpinnerItem<E>" as SpinnerItem {
+		+code : E?
+		+label : String
+		+description : String
+	}
+
+	enum Carrosserie {
+		UNKNOW
+		FOURGON_BREAK
+		BUS
+		MONOSPACE
+		MOTO
+		SUV
+		...
+		--
+		+code : Int?
+		+label : String
+		+description : String
+		--
+		+{static} from(code: Int?) : Carrosserie
+		+{static} codeFromLabel(label: String) : Int?
+	}
+
+	enum GearboxEnergy {
+		UNKNOW
+		DIESEL
+		ESSENCE
+		ELECTRIQUE
+		...
+		--
+		+code : Int?
+		+label : String
+		+description : String
+		--
+		+{static} from(code: Int?) : GearboxEnergy
+		+{static} codeFromLabel(label: String) : Int?
+	}
+
+	enum GearboxType {
+		UNKNOW
+		AUTOMATIQUE
+		MANUELLE
+		...
+		--
+		+code : String?
+		+label : String
+		+description : String
+		--
+		+{static} from(code: String?) : GearboxType
+		+{static} codeFromLabel(label: String) : String?
+	}
+
+	enum GenreVehicle {
+		UNKNOW
+		VP
+		MOTO
+		AGRI
+		...
+		--
+		+code : Int?
+		+label : String
+		+description : String
+		--
+		+{static} from(code: Int?) : GenreVehicle
+		+{static} codeFromLabel(label: String) : Int?
+	}
+
+	class VehicleInformation <<Parcelable>> {
+		' Identification
+		+vin : String
+		+country : String
+		' Brand
+		+brandName : String
+		+brandLogoUrl : String
+		' Model
+		+modelName : String
+		+modelVersion : String
+		+modelStartDate : String
+		+modelEndDate : String
+		+genreCode : Int?
+		+bodyCode : Int?
+		' Powertrain
+		+gearboxTypeCode : String?
+		+gearboxPowerLevel : Int
+		+energyCode : Int?
+		+powerKw : Int
+		+powerHp : Int
+		' Dimensions
+		+passengerCount : Int
+		+doorCount : Int
+		+color : String
+		+weightKg : Int
+		+grossWeightKg : Int
+		+lengthMm : Int
+		+widthMm : Int
+		+heightMm : Int
+		+wheelbaseMm : Int
+		' Registration
+		+firstRegistrationDate : String
+		+fuelTankCapacityLiters : Int
+		+collection : String
+		+mileage : Int
+		' Computed properties
+		+genre : GenreVehicle
+		+body : Carrosserie
+		+gearboxType : GearboxType
+		+energy : GearboxEnergy
+		+displayName : String
+		+year : Int?
+		--
+		+{static} new() : VehicleInformation
+	}
+
+	Carrosserie   ..|> SpinnerItem
+	GearboxEnergy ..|> SpinnerItem
+	GearboxType   ..|> SpinnerItem
+	GenreVehicle  ..|> SpinnerItem
+
+	VehicleInformation ..> GenreVehicle   : genre
+	VehicleInformation ..> Carrosserie    : body
+	VehicleInformation ..> GearboxType   : gearboxType
+	VehicleInformation ..> GearboxEnergy : energy
+}
+
+@enduml

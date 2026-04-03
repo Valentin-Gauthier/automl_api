@@ -1,0 +1,17 @@
+@startuml
+title Package : com.ecodrive.app.ui.* (UI controllers)
+
+package ".dialog" {
+	class AddToListDialog {
+		-context : Context
+		-vehicle : Vehicle
+		-onDone : ()->Unit
+		-db : AppDatabase
+		--
+		+show()
+		-buildAndShow(lists: List<VehicleList>)
+		-onConfirm(lists: List<VehicleList>, checked: BooleanArray, newListName: String)
+	}
+}
+
+@enduml

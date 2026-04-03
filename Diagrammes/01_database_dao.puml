@@ -1,0 +1,63 @@
+@startuml
+title Package : com.ecodrive.app.database.*
+
+package ".dao" {
+	interface BrandDao {
+		+insert(brand: Brand) : Long <<suspend>>
+		+deleteById(id: Int) <<suspend>>
+		+getAll() : Flow<List<Brand>>
+	}
+
+	interface EnergyDao {
+		+insert(energy: Energy) : Long <<suspend>>
+		+deleteById(id: Int) <<suspend>>
+		+getAll() : Flow<List<Energy>>
+	}
+
+	interface GearboxDao {
+		+insert(gearbox: Gearbox) : Long <<suspend>>
+		+deleteById(id: Int) <<suspend>>
+		+getAll() : Flow<List<Gearbox>>
+	}
+
+	interface GearboxEnergyCompatibilityDao {
+		+insert(gec: GearboxEnergyCompatibility) <<suspend>>
+		+deleteById(gearboxId: Int, energyId: Int) <<suspend>>
+		+getAllCompatibleEnergies(gearboxId: Int) : Flow<List<Energy>>
+		+getAllCompatibleGearboxes(energyId: Int) : Flow<List<Gearbox>>
+	}
+
+	interface VehicleDao {
+		+insert(vehicle: Vehicle) <<suspend>>
+		+deleteById(immatriculation: String) <<suspend>>
+		+getById(immatriculation: String) : Vehicle? <<suspend>>
+		+getAll() : Flow<List<Vehicle>>
+		+getBrandOf(vehiclePrototypeId: Int) : Flow<Brand>
+	}
+
+	interface VehicleAdDao {
+		+insert(vehicleAd: VehicleAd) : Long <<suspend>>
+		+deleteById(id: String) <<suspend>>
+		+getAllAdsFrom(vehicle: String) : Flow<List<VehicleAd>>
+	}
+
+	interface VehicleListDao {
+		+insert(vehicleList: VehicleList) : Long <<suspend>>
+		+deleteById(id: Int) <<suspend>>
+		+getAll() : Flow<List<VehicleList>>
+	}
+
+	interface VehicleInListDao {
+		+insert(vehicleInList: VehicleInList) : Long <<suspend>>
+		+deleteById(immatriculation: String, listId: Int) <<suspend>>
+		+getAllFrom(list: Int) : Flow<List<Vehicle>>
+	}
+
+	interface VehiclePrototypeDao {
+		+insert(vehiclePrototype: VehiclePrototype) : Long <<suspend>>
+		+deleteById(id: Int) <<suspend>>
+		+getAll() : Flow<List<VehiclePrototype>>
+	}
+}
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+title Package : com.ecodrive.app.ui.* (UI controllers)
+
+package ".gallery" {
+	class GalleryManager {
+		-activity : Activity
+		-galleryContainer : ScrollView
+		-voidGallery : View
+		-galleryName : TextView
+		-addVehicleButton : Button
+		-defaultName : String
+		--
+		+changeName(name: String?)
+		+refresh(vehicles: List<String>, nbVehiclePerLine: Int)
+	}
+
+	class CategoryManager {
+		-activity : Activity
+		-tabContent : LinearLayout
+		-oldSelectedTabId : Int?
+		--
+		+getGallery() : GalleryManager
+		+refresh(categories: List<Pair<String,List<String>>>, selectedCategory: Int, nbVehiclePerLine: Int)
+	}
+
+	CategoryManager *--> GalleryManager : galleryManager
+}
+
+@enduml

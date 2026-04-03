@@ -1,0 +1,37 @@
+@startuml
+title Package : com.ecodrive.app.vehicle.* ()
+
+package ".plate" {
+	class PlateAnalyzer {
+		+analyze(result: ExtractionResult) : PlateInformation
+		-findMainSection(blocks: List<TextBlock>) : TextBlock?
+		-findEuSection(blocks: List<TextBlock>, main: TextBlock) : TextBlock?
+		-findRegionalSection(blocks: List<TextBlock>, main: TextBlock) : TextBlock?
+		-findValiditySection(blocks: List<TextBlock>, main: TextBlock) : TextBlock?
+		-buildMainSection(block: TextBlock) : MainSection
+		-buildEuSection(block: TextBlock) : EuSection
+		-buildRegionalSection(block: TextBlock) : RegionalSection
+		-buildValiditySection(block: TextBlock) : ValiditySection?
+		-classifyType(...) : PlateType
+		-detectFormat(plateRect: Rect) : PlateFormat
+		-computeConfidence(...) : Float
+		-{static} SIV_REGEX : Regex
+		-{static} FNI_REGEX : Regex
+		-{static} DEPT_REGEX : Regex
+		-{static} VALIDITY_REGEX : Regex
+		-{static} TOLERANCE_PX : Int
+		-{static} MOTO_RATIO_THRESHOLD : Float
+		-{static} CAR_RATIO_THRESHOLD : Float
+	}
+
+	class PlateAPI {
+		-apiToken : String
+		-executor : ExecutorService
+		+fetchVehicle(plate: PlateInformation, onSuccess: (VehicleInformation)->Unit, onError: (String)->Unit)
+		+shutdown()
+		-callSivApi(formattedPlate: String) : VehicleInformation?
+		+{static} TOKEN_DEMO : String
+	}
+}
+
+@enduml

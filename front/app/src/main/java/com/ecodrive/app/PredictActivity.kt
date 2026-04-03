@@ -26,6 +26,7 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
+import kotlin.math.roundToInt
 
 class PredictActivity : AppCompatActivity() {
 
@@ -47,6 +48,8 @@ class PredictActivity : AppCompatActivity() {
     private lateinit var usedPriceMax: TextView
     private lateinit var newPriceMin:  TextView
     private lateinit var newPriceMax:  TextView
+
+    private var estimatedPrice: Double = 0.0
 
     private lateinit var btnFindNearestGarage: Button
     private lateinit var btnPrepareAd: Button
@@ -166,16 +169,16 @@ class PredictActivity : AppCompatActivity() {
                 }
 
                 // On récupère le prix (ton API renvoie un float, donc on lit un Double en Kotlin)
-                val estimated_price = json.getDouble("estimated_price")
-                val error_estimation = 0.1 * estimated_price
+                estimatedPrice = json.getDouble("estimated_price")
+                val error_estimation = 0.1 * estimatedPrice
 
                 // 7. 🚨 MODIFICATION UI : Doit se faire sur le thread principal !
                 runOnUiThread {
                     // On convertit en Int pour l'affichage (pas de centimes)
-                    usedPriceMin.text = (estimated_price - error_estimation).toInt().toString()
-                    usedPriceMax.text = (estimated_price + error_estimation).toInt().toString()
-                    newPriceMin.text  = (estimated_price - error_estimation).toInt().toString()
-                    newPriceMax.text  = (estimated_price + error_estimation).toInt().toString()
+                    usedPriceMin.text = (estimatedPrice - error_estimation).toInt().toString()
+                    usedPriceMax.text = (estimatedPrice + error_estimation).toInt().toString()
+                    newPriceMin.text  = ((estimatedPrice - error_estimation).toInt() * 1.86).roundToInt().toString()
+                    newPriceMax.text  = ((estimatedPrice + error_estimation).toInt() * 1.86).roundToInt().toString()
 
                     usedPriceMin.visibility = View.VISIBLE
                     usedPriceMax.visibility = View.VISIBLE
@@ -226,6 +229,7 @@ class PredictActivity : AppCompatActivity() {
         val intent = Intent(this, AdMakerActivity::class.java).apply {
             vehicle?.let { putExtra(AdMakerActivity.EXTRA_VEHICLE, it) }
             plate?.let   { putExtra(AdMakerActivity.EXTRA_PLATE, it) }
+            estimatedPrice?.let   { putExtra(AdMakerActivity.EXTRA_ESTIMATE_PRICE, it) }
         }
         startActivity(intent)
     }

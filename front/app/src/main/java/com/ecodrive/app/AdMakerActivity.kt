@@ -33,6 +33,7 @@ class AdMakerActivity : AppCompatActivity() {
 
     private var vehicle: VehicleInformation? = null
     private var plate: PlateInformation? = null
+    private var price: Double? = null
     private var step: Int? = 0
 
     // -------------------------------------------------------------------------
@@ -48,8 +49,13 @@ class AdMakerActivity : AppCompatActivity() {
 
         vehicle = intentParcelable(EXTRA_VEHICLE, VehicleInformation::class.java)
         plate   = intentParcelable(EXTRA_PLATE,   PlateInformation::class.java)
+        price = intent.getDoubleExtra(EXTRA_ESTIMATE_PRICE, 0.0)
 
         vehicle?.let { prefillAd(it) }
+
+        price?.let {
+            etAdPrice.setText(it.toInt().toString())
+        }
 
         btnGenerateDesc.setOnClickListener { generateDescription() }
         btnPhotoAid.setOnClickListener    { goToPhotoActivity() }
@@ -115,6 +121,9 @@ class AdMakerActivity : AppCompatActivity() {
     private fun generateDescription() {
         val v = vehicle ?: return
         etAdDescription.setText(buildDescription(v))
+        price?.let {
+            etAdPrice.setText(it.toInt().toString())
+        }
         Toast.makeText(this, getString(R.string.ad_description_generated), Toast.LENGTH_SHORT).show()
     }
 
@@ -185,5 +194,7 @@ class AdMakerActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_VEHICLE = "extra_vehicle_information"
         const val EXTRA_PLATE   = "extra_plate_information"
+
+        const val EXTRA_ESTIMATE_PRICE = "EXTRA_ESTIMATE_PRICE"
     }
 }

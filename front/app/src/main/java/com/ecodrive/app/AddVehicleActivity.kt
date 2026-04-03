@@ -84,7 +84,7 @@ class AddVehicleActivity : AppCompatActivity() {
     //
 
     private var baseVehicle: VehicleInformation = VehicleInformation.new()
-    private var plate: PlateInformation? = null
+    private var plate: String? = null
     private var selectedDateIso: String = ""
 
     /** Adapters pour les spinners */
@@ -110,7 +110,7 @@ class AddVehicleActivity : AppCompatActivity() {
         setupValidation()
 
         // Pré-remplissage si on vient du scan
-        plate = intentParcelable(EXTRA_PLATE, PlateInformation::class.java)
+        plate = intent.getStringExtra(ScanActivity.EXTRA_PLATE_INFO)
         val prefilled = intentParcelable(EXTRA_VEHICLE, VehicleInformation::class.java)
 
         plate?.let { p ->

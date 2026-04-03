@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.layout.OnPlacedModifier
 import com.ecodrive.app.camera.CameraManager
 import com.ecodrive.app.camera.PreviewManager
 import com.ecodrive.app.databinding.ActivityScanBinding
@@ -54,6 +55,7 @@ class ScanActivity : AppCompatActivity() {
     }
 
     private fun goNextActivity(msg: String, finishCurrent: Boolean = true) {
+        stopAutoScan()
         Log.d(TAG, "\n=============\nGo to AddVehicleActivity.\n================\n")
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
         binding.root.postDelayed({
@@ -108,14 +110,14 @@ class ScanActivity : AppCompatActivity() {
             goNextActivity("Impossible d'ouvrir la caméra : ${it.message}")
         }
 
-        binding.root.postDelayed({
-            Log.d(TAG, "Start auto-scan")
-            startAutoScan()
-            binding.root.postDelayed({
-                Log.d(TAG, (if (previewManager.isActivated) "trigger is already activated" else "activated trigger."))
-                previewManager.activatedTrigger()
-            }, 500)
-        }, 500)
+        // binding.root.postDelayed({
+        //    Log.d(TAG, "Start auto-scan")
+        //    startAutoScan()
+        //    binding.root.postDelayed({
+        //        Log.d(TAG, (if (previewManager.isActivated) "trigger is already activated" else "activated trigger."))
+        //        previewManager.activatedTrigger()
+        //    }, 500)
+        //}, 500)
     }
 
     private val autoScanRunnable = object : Runnable {
@@ -154,7 +156,11 @@ class ScanActivity : AppCompatActivity() {
      */
     private fun onScanRequested() {
         if (!cameraManager.isReady) {
-            Toast.makeText(this, "Caméra non prête", Toast.LENGTH_SHORT).show()
+            if (isUserQuery){
+                Toast.makeText(this, "Caméra non prête", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.d(TAG, "Auto-scan en attente : la caméra s'allume...")
+            }
             return checkIfContinue()
         }
 
@@ -174,7 +180,7 @@ class ScanActivity : AppCompatActivity() {
         Log.d(TAG, "Extract text from camera")
         textExtractor.extract(
             bitmap    = bitmap,
-            onResult  = { result -> analyzePlate(result) },
+            onResult  = { result -> onPlateResult(result.blocks.firstOrNull()?.text) },
             onError   = { checkIfContinue() }
         )
     }
@@ -182,25 +188,41 @@ class ScanActivity : AppCompatActivity() {
     /**
      * Étape 3 : analyse de la plaque.
      */
-    private fun analyzePlate(result: ExtractionResult) {
-        Log.d(TAG, "Analysis presence of plates with the text extract : $result")
-        val info = plateAnalyzer.analyze(result)
-        isProcessing = false
-        onPlateResult(info)
-    }
+    //private fun analyzePlate(result: ExtractionResult) {
+    //    Log.d(TAG, "Analysis presence of plates with the text extract : $result")
+    //    val info = plateAnalyzer.analyze(result)
+    //    isProcessing = false
+    //    onPlateResult(info)
+    //}
 
     /**
      * Étape 4 : exploitation du résultat.
      */
-    private fun onPlateResult(info: PlateInformation?) {
-        Log.d(TAG, if (info == null) "No plate detected, but continu to the next activity." else "Plate detected. Extract car informations.")
+    private fun onPlateResult(info: String?) {
         isProcessing = false
+
         if (info != null) {
+
+            val cleanedPlate = info
+                .replace(":", "-")
+                .replace(".", "-")
+                .replace(" ", "-")
+                .uppercase()
+
+            stopAutoScan()
             val intent = Intent(this, AddVehicleActivity::class.java)
-                .putExtra(EXTRA_PLATE_INFO, info)
+                .putExtra(EXTRA_PLATE_INFO, cleanedPlate)
             startActivity(intent)
+            finish()
+
         } else {
-            goNextActivity("Aucune plaque d'immatriculation détecté.", false)
+
+            if (isUserQuery) {
+                stopAutoScan()
+                goNextActivity("Aucune plaque d'immatriculation détectée.", true)
+            } else {
+                Log.d(TAG, "Auto-scan: Aucune plaque trouvée pour l'instant, on continue...")
+            }
         }
     }
 

@@ -44,4 +44,10 @@ Auth <..> ServerDB
 
 MLKit .[hidden] User
 
+legend
+	a . . b : relation prévue ou non finalisée
+	a ─── b : lien structurel (association)
+	a ───> b : a utilise / appel b
+end legend
+
 @enduml

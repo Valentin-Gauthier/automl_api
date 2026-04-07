@@ -1,0 +1,43 @@
+@startuml
+title Package : com.ecodrive.app.camera.* (Camera Controller)
+
+class CameraManager {
+	-context : Context
+	+requestCamera : Int
+	-previewUI : TextureView
+	-cameraProvider : ProcessCameraProvider?
+	-imageCapture : ImageCapture?
+	-isStarted : Boolean
+	--
+	+safeStart(activity: Activity, lifecycleOwner: LifecycleOwner, onError: (Exception)->Unit)
+	-baseStart(lifecycleOwner: LifecycleOwner, onError: (Exception)->Unit)
+	+stop()
+	+capture(onSuccess: (Bitmap)->Unit, onError: (Exception)->Unit)
+	+onRequestPermissionsResult(lifecycleOwner: LifecycleOwner, requestCode: Int, permissions: Array<String>, grantResults: IntArray, onFail: ()->Unit)
+	-bindUseCases(lifecycleOwner: LifecycleOwner)
+	-hasPermission() : Boolean
+	-requestCameraPermission(activity: Activity)
+	-imageProxyToBitmap(imageProxy: ImageProxy) : Bitmap
+	-rotateBitmap(bitmap: Bitmap, degrees: Int) : Bitmap
+	+isReady : Boolean
+}
+
+class PreviewManager {
+	-activity : Activity
+	-instruction : TextView
+	-cheese : Button
+	-preview : TextureView
+	--
+	+write(msg: String) : CharSequence?
+	+setOnClickListener(exec: (View)->Unit)
+	+getPreview() : TextureView
+	+inactivatedTrigger()
+	+activatedTrigger()
+	+enterImmersiveMode()
+	+exitImmersiveMode()
+	+isActivated : Boolean
+}
+
+PreviewManager --> CameraManager : fournit TextureView à
+
+@enduml

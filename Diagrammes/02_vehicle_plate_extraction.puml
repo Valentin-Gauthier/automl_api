@@ -1,0 +1,40 @@
+@startuml
+title Package : com.ecodrive.app.vehicle.plate.* (Analyse des plaques d'immatriculation)
+
+package ".extraction" {
+	class TextBlock {
+		+text : String
+		+corners : Array<PointF>
+		+boundingBox : Rect
+		+textColor : Int
+		+backgroundColor : Int
+		+confidence : Float
+		--
+		+equals(other: Any?) : Boolean
+		+hashCode() : Int
+	}
+
+	class ExtractionResult {
+		+blocks : List<TextBlock>
+		+imageWidth : Int
+		+imageHeight : Int
+	}
+
+	class TextExtractor {
+		-recognizer : TextRecognizer
+		-{static} SAMPLE_GRID : Int
+		--
+		+extract(bitmap: Bitmap, onResult: (ExtractionResult)->Unit, onError: (Exception)->Unit)
+		+release()
+		-buildTextBlock(line: Text.Line, bitmap: Bitmap) : TextBlock?
+		-sampleColors(bitmap: Bitmap, box: Rect) : Pair<Int,Int>
+		-luminance(color: Int) : Float
+		-averageColor(pixels: List<Int>) : Int
+		-clampRect(rect: Rect, maxW: Int, maxH: Int) : Rect
+	}
+
+	TextExtractor ..> ExtractionResult : produit
+	ExtractionResult "1" *--> "0..*" TextBlock : blocks
+}
+
+@enduml

@@ -1,0 +1,53 @@
+@startuml
+title Package : com.ecodrive.app.ui.* (UI controllers)
+
+package ".mainframe" {
+	enum FooterTab {
+		NONE
+		HOME
+		ADD
+		PREDICT
+		CONFIG
+	}
+
+	class FooterManager {
+		-activity : Activity
+		-currentActivityId : FooterTab
+		-onCurrentButtonClick : (View)->Unit
+		-btnHome : Button
+		-btnAddVehicle : Button
+		-btnConfig : Button
+		--
+	}
+
+	class HeaderManager {
+		-activity : Activity
+		-headerContainer : View
+		-appName : TextView
+		-activityDescription : TextView
+		-appIcon : View
+		-infoSpace : LinearLayout
+		-buttonSpace : LinearLayout
+		--
+		+addInfo(number: String) : HeaderManager
+		+addButton(button: Button) : HeaderManager
+		+changeDescr(text: String) : HeaderManager
+		+unactiveName(visible: Boolean) : HeaderManager
+		+unactiveLogo(visible: Boolean) : HeaderManager
+	}
+
+	class MainFrameManager {
+		--
+		+addInfo(number: String) : HeaderManager
+		+addButton(button: Button) : HeaderManager
+		+changeDescr(text: String) : HeaderManager
+		+unactiveName(visible: Boolean) : HeaderManager
+		+unactiveLogo(visible: Boolean) : HeaderManager
+	}
+
+	FooterManager --> FooterTab
+	MainFrameManager *--> HeaderManager : headerManager
+	MainFrameManager *--> FooterManager : <<crée>>
+}
+
+@enduml

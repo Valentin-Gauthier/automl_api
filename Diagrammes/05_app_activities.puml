@@ -1,0 +1,81 @@
+@startuml
+title Package : com.ecodrive.app.* (Activities)
+
+abstract class AppCompatActivity <<Android>>
+
+class MainActivity {
+	--
+	+onCreate(savedInstanceState: Bundle?)
+}
+
+class ScanActivity {
+	-{static} REQUEST_CAMERA : Int
+	-{static} AUTO_SCAN_INTERVAL : Long
+	-{static} EXTRA_PLATE_INFO : String
+	--
+	+onCreate(savedInstanceState: Bundle?)
+	+onDestroy()
+}
+
+class AddVehicleActivity {
+	-{static} EXTRA_VEHICLE : String
+	-{static} EXTRA_PLATE : String
+	-{static} MILEAGE_MAX_STEPS : Int
+	--
+	+onCreate(savedInstanceState: Bundle?)
+}
+
+class PredictActivity {
+	-{static} EXTRA_VEHICLE : String
+	-{static} EXTRA_PLATE : String
+	--
+	+onCreate(savedInstanceState: Bundle?)
+}
+
+class AdMakerActivity {
+	-{static} EXTRA_VEHICLE : String
+	-{static} EXTRA_PLATE : String
+	--
+	+onCreate(savedInstanceState: Bundle?)
+}
+
+class PhotoAdActivity {
+	-{static} REQUEST_CAMERA : Int
+	-{static} EXTRA_VEHICLE_PATH : String
+	-{static} EXTRA_INDEX : String
+	-{static} PHOTO_INSTRUCTIONS : List<String>
+	--
+	+onCreate(savedInstanceState: Bundle?)
+	+onResume()
+	+onPause()
+	+onDestroy()
+	+onSensorChanged(event: SensorEvent)
+	+onAccuracyChanged(sensor: Sensor?, accuracy: Int)
+}
+
+class SettingsActivity {
+	-{static} PREFS_NAME : String
+	-{static} KEY_GALLERY_SIZE : String
+	-{static} KEY_API_TOKEN : String
+	-{static} DEFAULT_GALLERY_SIZE : Int
+	-{static} MAX_GALLERY_SIZE : Int
+	--
+	+onCreate(savedInstanceState: Bundle?)
+}
+
+MainActivity       --|> AppCompatActivity
+ScanActivity       --|> AppCompatActivity
+AddVehicleActivity --|> AppCompatActivity
+AppCompatActivity  <|-  PredictActivity
+AppCompatActivity  <|-- AdMakerActivity
+AppCompatActivity  <|-- PhotoAdActivity
+SettingsActivity   -|>  AppCompatActivity
+
+' Navigation entre activités
+MainActivity        .> ScanActivity       : lance
+ScanActivity        .> AddVehicleActivity : lance (+ PlateInformation)
+AddVehicleActivity ..> PredictActivity    : lance (+ VehicleInformation)
+PredictActivity     .> AdMakerActivity    : lance (+ VehicleInformation)
+PhotoAdActivity     <. AdMakerActivity    : lance
+
+@enduml

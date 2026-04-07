@@ -1,0 +1,91 @@
+@startuml
+title Package : com.ecodrive.app.database.*
+
+package ".entities" {
+	class Brand {
+		+id : Int
+		+name : String
+		+pp : String
+	}
+
+	class Energy {
+		+id : Int
+		+name : String
+	}
+
+	class Gearbox {
+		+id : Int
+		+name : String
+		+options : String
+	}
+
+	class GearboxEnergyCompatibility {
+		+gearboxId : Int
+		+energyId : Int
+	}
+
+	class VehiclePrototype {
+		+id : Int
+		+name : String
+		+gearboxOptions : String
+		+energyId : Int
+		+gearboxId : Int
+		+marqueId : Int
+	}
+
+	class Vehicle {
+		+immatriculation : String
+		+date : String
+		+couleur : String
+		+mileage : Int
+		+priceNewMin : Int
+		+priceNewMax : Int
+		+priceUsedMin : Int
+		+priceUsedMax : Int
+		+pp : String
+		+prototypeId : Int
+	}
+
+	class VehicleAd {
+		+id : Int
+		+immatriculation : String
+		+pp : String
+	}
+
+	class VehicleList {
+		+id : Int
+		+name : String
+	}
+
+	class VehicleInList {
+		+immatriculation : String
+		+listId : Int
+	}
+
+	' Relations de clé étrangère (Room @ForeignKey)
+	VehiclePrototype "0..*" --> "1" Brand        : BrandId
+	VehiclePrototype "0..*" --> "1" Energy        : EnergyId
+	VehiclePrototype "0..*" --> "1" Gearbox       : GearboxId
+
+	GearboxEnergyCompatibility "0..*" --> "1" Gearbox  : GearboxId
+	GearboxEnergyCompatibility "0..*" --> "1" Energy   : EnergyId
+
+	Vehicle "0..*" --> "1" VehiclePrototype : PrototypeId
+
+	VehicleAd "0..*" --> "1" Vehicle : immatriculation
+
+	VehicleInList "0..*" --> "1" Vehicle     : immatriculation
+	VehicleInList "0..*" --> "1" VehicleList : ListId
+}
+
+note bottom of GearboxEnergyCompatibility
+	Clé primaire composite :
+	(GearboxId, EnergyId)
+end note
+
+note bottom of VehicleInList
+	Clé primaire composite :
+	(immatriculation, ListId)
+end note
+
+@enduml

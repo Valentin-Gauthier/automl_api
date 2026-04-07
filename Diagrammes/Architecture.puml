@@ -1,0 +1,53 @@
+@startuml
+' Style général
+skinparam componentStyle rectangle
+
+' --- CLIENT ---
+actor "Utilisateur" as User
+package "Téléphone Android" as Client {
+	[Eco-drive app] as AppUI
+	() "Room (BDD Locale)" as LocalDB
+	() "Google.MLKit" as MLKit
+}
+
+' --- SERVER ---
+package "Server" {
+	() "AuthentificationAPI" as Auth
+	() "PredictAPI" as PredictAPI
+	() "FeedbackAPI" as FeedbackAPI
+	[MLModel] as MLModel
+	[ServerDB] as ServerDB
+}
+
+' --- EXTERNAL ---
+package "External" {
+	() "apiplaqueimmatriculation.com" as PlateAPI
+}
+
+' --- RELATIONS ---
+AppUI <- User : Utilise
+LocalDB <-- AppUI
+
+MLKit <-- AppUI : Extrait le texte\nd'une plaque\nd'immatriculation
+
+AppUI --> PlateAPI : HTTP.GET /plaque
+
+AppUI -> PredictAPI : HTTP.POST /predict
+PredictAPI -> MLModel
+
+ServerDB <--> MLModel
+
+AppUI .> FeedbackAPI : HTTP.POST /feedback
+FeedbackAPI .> ServerDB
+
+Auth <..> ServerDB
+
+MLKit .[hidden] User
+
+legend
+	a . . b : relation prévue ou non finalisée
+	a ─── b : lien structurel (association)
+	a ───> b : a utilise / appel b
+end legend
+
+@enduml

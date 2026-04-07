@@ -1,0 +1,104 @@
+@startuml
+title Package : com.ecodrive.app.vehicle.plate.* (Analyse des plaques d'immatriculation)
+
+package ".data" {
+	package ".section" {
+		class EuSection {
+			+block : TextBlock
+			+isBlue : Boolean
+			+countryCode : String
+		}
+
+		class MainSection {
+			+block : TextBlock
+			+rawNumber : String
+			+normalizedNumber : String
+			+system : RegistrationSystem
+		}
+
+		class RegionalSection {
+			+block : TextBlock
+			+departmentCode : String
+			+isBlue : Boolean
+		}
+
+		class ValiditySection {
+			+block : TextBlock
+			+month : Int
+			+year : Int
+		}
+
+		EuSection       --> TextBlock : block
+		MainSection     --> TextBlock : block
+		RegionalSection --> TextBlock : block
+		ValiditySection --> TextBlock : block
+	}
+
+	enum PlateType {
+		UNKNOWN
+		NORMAL
+		NORMAL_ARRIERE
+		COLLECTION_RECENT
+		COLLECTION_OLD
+		TEMPORARY
+		SPECIAL
+	}
+
+	enum PlateFormat {
+		UNKNOWN
+		STANDARD
+		MOTORCYCLE
+	}
+
+	enum RegistrationSystem {
+		UNKNOWN
+		SIV
+		FNI
+	}
+
+	class PlateInformation <<Parcelable>> {
+		+type : PlateType
+		+format : PlateFormat
+		+registrationSystem : RegistrationSystem
+		+number : String
+		+countryCode : String?
+		+departmentCode : String?
+		+validityDate : YearMonth?
+		+confidence : Float
+		--
+		+{static} new() : PlateInformation
+	}
+
+	class PlateInformationBuilder {
+		-type : PlateType
+		-format : PlateFormat
+		-plateArea : Rect
+		-mainSection : MainSection?
+		-euSection : EuSection?
+		-regionalSection : RegionalSection?
+		-validitySection : ValiditySection?
+		-confidence : Float
+		-rawBlocks : List<TextBlock>
+		+registrationNumber : Pair<RegistrationSystem, String>?
+		+departmentCode : String?
+		+validityDate : YearMonth?
+		+isValid : Boolean
+		--
+		+build() : PlateInformation
+		+{static} MIN_CONFIDENCE : Float
+	}
+
+	PlateInformation       --> PlateType
+	PlateInformation       --> PlateFormat
+	PlateInformation       --> RegistrationSystem
+	PlateInformationBuilder --> PlateType
+	PlateInformationBuilder --> PlateFormat
+	PlateInformationBuilder --> MainSection
+	PlateInformationBuilder --> EuSection
+	PlateInformationBuilder --> RegionalSection
+	PlateInformationBuilder --> ValiditySection
+	PlateInformationBuilder ..> PlateInformation : <<crée>>
+	MainSection --> RegistrationSystem
+}
+
+@enduml

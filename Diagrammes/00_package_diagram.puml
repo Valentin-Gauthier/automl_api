@@ -1,0 +1,30 @@
+@startuml
+title Diagramme de packages — com.ecodrive.app
+
+' ============================================================
+' Définition des packages
+' ============================================================
+
+package "com.ecodrive.app" as app {
+	package ".camera" as camera
+	package ".database" as database {
+		package ".entities" as db_entities
+		package ".dao" as db_dao 
+	}
+	package ".ui" as ui {
+		package ".dialog" as ui_dialog 
+		package ".mainframe" as ui_mainframe {
+			package ".gallery" as ui_gallery
+		}
+	}
+	package ".vehicle" as vehicle {
+		package ".plate" as plate {
+			package ".data" as plate_data {
+				package ".section" as plate_section
+			}
+			package ".extraction" as plate_extraction
+		}
+	}
+}
+
+@enduml
